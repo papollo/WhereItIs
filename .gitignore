@@ -1,0 +1,36 @@
+# ---- Angular / Node ----
+node_modules/
+dist/
+out-tsc/
+.tmp/
+temp/
+logs/
+*.log
+
+# Angular cache
+.angular/
+.angular/cache/
+
+# Environment files (falls lokal)
+src/environments/*.local.ts
+src/environments/*.dev.ts
+src/environments/*.test.ts
+
+# IDE: IntelliJ / WebStorm / IDEA
+.idea/
+*.iml
+
+# VSCode (falls benutzt)
+.vscode/
+
+# ---- OS specific ----
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# Linux
+*~
