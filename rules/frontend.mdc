@@ -1,0 +1,39 @@
+---
+alwaysApply: true
+---
+
+## Tech Stack
+
+- Angular 21
+- TypeScript
+- HTML5/CSS3
+- Angular Material
+- RxJS
+
+## Struktura projektu
+
+Przy tworzeniu zmian w projekcie zawsze twórz zasoby zgodne z poniższą strukturą:
+
+- `./src`                → source code
+- `./src/layouts`        → app-level layouts (root layouts, shells, UI frames)
+- `./src/pages`        → routed pages (each = standalone page component)
+- `./src/pages/api`      → API logic (Angular services acting as API endpoints)
+- `./src/components`     → shared UI components (stateless, reusable)
+- `./src/assets`         → internal static assets
+- `./public`             → public static files (robots.txt, favicon, etc.)
+
+
+Kiedy modyfikujesz strukturę katalogów, zawsze aktualizuj tę sekcję.
+
+## Zasady kodowania
+
+### Wytyczne dotyczące czystego kodu
+
+- Priorytetowo traktuj obsługę błędów i przypadków brzegowych.
+- Obsługuj błędy oraz przypadki brzegowe na początku funkcji.
+-Używaj wczesnych zwrotów (early return) dla warunków błędnych, aby uniknąć głęboko zagnieżdżonych instrukcji if.
+- Umieszczaj główną, poprawną ścieżkę wykonania (happy path) na końcu funkcji dla lepszej czytelności.
+- Unikaj zbędnych instrukcji else; stosuj wzorzec if → return.
+- Używaj klauzul strażniczych (guard clauses), aby wcześnie obsłużyć warunki wstępne i nieprawidłowe stany.
+- Zaimplementuj odpowiednie logowanie błędów oraz przyjazne dla użytkownika komunikaty.
+- Rozważ stosowanie własnych typów błędów lub fabryk błędów dla spójnej obsługi wyjątków.

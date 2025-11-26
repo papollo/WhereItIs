@@ -1,0 +1,21 @@
+---
+globs: *.scss,*.html
+alwaysApply: false
+---
+- Stosuj semantyczne HTML
+Używaj odpowiednich tagów (header, main, section, article, button, nav itd.) zamiast nadmiernego wykorzystywania <div> i <span>.
+
+- Nie łam istniejącego layoutu
+Modyfikując HTML/CSS zachowaj obecny układ strony. Zmieniaj minimalnie struktury DOM, chyba że wyraźnie proszę o refactor UI/UX.
+
+- Dbaj o responsywność i dostępność
+Upewniaj się, że nowe elementy dobrze zachowują się na różnych szerokościach i wspieraj dostępność (atrybuty aria-*, poprawne etykiety dla przycisków, alt dla obrazków).
+
+- Korzystaj z gotowych komponentów Angular Material
+Jeśli potrzebny jest przycisk, dialog, tabela, formularz itp., preferuj komponenty z Angular Material zamiast tworzyć własne od zera, o ile to pasuje do projektu.
+
+- Szanuj istniejące theming i style
+Nie nadpisuj agresywnie styli Angular Material (np. globalne !important). Dodawaj stylizację w sposób spójny z już używanym podejściem (theming, SCSS, klasy pomocnicze).
+
+- Zachowaj spójność UI
+Używaj spójnych wariantów (color, appearance, density) zgodnie z tym, co już jest w projekcie. Nie mieszaj wielu różnych styli wizualnych na jednej stronie.

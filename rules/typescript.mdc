@@ -1,0 +1,12 @@
+---
+globs: *.ts
+alwaysApply: false
+---
+- Zawsze używaj silnego typowania
+Unikaj any i unknown, chyba że jest to absolutnie konieczne. Preferuj typy i interfejsy (interface, type) oraz generics zamiast luźnych typów.
+
+- Nie powielaj typów – reużywaj definicje
+Jeśli jakiś kształt danych powtarza się (np. odpowiedź z API, model formularza), wyodrębnij go do jednego, współdzielonego typu/interfejsu.
+
+- Korzystaj z nowoczesnych funkcji TS
+Używaj enum/as const, union types, optional chaining, nullish coalescing (??) i typów wyliczanych zamiast nadmiernego opierania się na string i number.

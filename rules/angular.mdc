@@ -1,0 +1,15 @@
+---
+globs: *.ts
+alwaysApply: false
+---
+- Używaj aktualnych wzorców Angular
+
+Preferuj standalone components, inject() zamiast starego constructor(private svc:...), moduły twórz tylko gdy są naprawdę potrzebne. Nie używaj przestarzałych API, jeśli istnieje nowszy, rekomendowany sposób.
+
+- Trzymaj logikę w serwisach, nie w komponentach
+
+Komponenty powinny głównie obsługiwać widok (UI). Logikę biznesową, komunikację z API i zarządzanie stanem przenoś do serwisów lub dedykowanych warstw.
+
+- Dbaj o wydajność i czytelność widoków
+
+Używaj *ngIf, *ngFor z trackBy i unikania ciężkich operacji w template’ach. Nie wkładaj złożonej logiki do interpolacji – przenoś ją do metod lub getterów, jeśli musi być w komponencie.
