@@ -16,7 +16,7 @@
       ],
       "parserOptions": {
         "project": [
-          "tsconfig.app.json",
+          "tsconfig.eslint.json",
           "tsconfig.spec.json"
         ]
       },
