@@ -1,0 +1,114 @@
+# Architektura UI dla WhereItIs
+
+## 1. Przegląd struktury UI
+
+Architektura UI opiera się na prostym, desktopowym układzie z lewym panelem nawigacyjnym oraz główną przestrzenią roboczą. Po zalogowaniu użytkownik widzi listę pokojów jako ekran startowy. Z poziomu nawigacji bocznej można przejść do widoku wyszukiwania przedmiotu oraz edycji użytkownika. Kluczowe operacje (tworzenie/edycja pokoju, dodawanie mebli, zarządzanie przedmiotami) są realizowane przez dedykowane widoki i modale, a dane są pobierane bezpośrednio z API bez cache’u.
+
+## 2. Lista widoków
+
+- Nazwa widoku: Logowanie
+  - Ścieżka widoku: /login
+  - Główny cel: Uwierzytelnienie użytkownika (email + hasło).
+  - Kluczowe informacje do wyświetlenia: Formularz logowania, komunikaty błędów.
+  - Kluczowe komponenty widoku: Formularz auth, przycisk „Zaloguj”, link do rejestracji.
+  - UX, dostępność i względy bezpieczeństwa: Walidacja pól, obsługa 401/429, redirect po sukcesie; JWT w pamięci klienta.
+
+- Nazwa widoku: Rejestracja
+  - Ścieżka widoku: /register
+  - Główny cel: Utworzenie konta użytkownika.
+  - Kluczowe informacje do wyświetlenia: Formularz email/hasło, komunikaty walidacji.
+  - Kluczowe komponenty widoku: Formularz auth, przycisk „Utwórz konto”, link do logowania.
+  - UX, dostępność i względy bezpieczeństwa: Wymuszenie długości/formatu hasła, obsługa błędów 400/422.
+
+- Nazwa widoku: Lista pokojów (Dashboard)
+  - Ścieżka widoku: /rooms
+  - Główny cel: Przegląd i zarządzanie pokojami.
+  - Kluczowe informacje do wyświetlenia: Lista pokojów z nazwą i kolorem; CTA „Dodaj pokój”.
+  - Kluczowe komponenty widoku: Lista kart/wierszy pokoju, przycisk „Dodaj pokój”, przycisk „Edytuj” przy każdym pokoju.
+  - UX, dostępność i względy bezpieczeństwa: Puste stany, obsługa błędów API (toast), dostępność listy i przycisków.
+
+- Nazwa widoku: Szczegóły pokoju
+  - Ścieżka widoku: /rooms/:roomId
+  - Główny cel: Prezentacja pokoju i mebli oraz wejście w zarządzanie przedmiotami.
+  - Kluczowe informacje do wyświetlenia: Siatka/układ pokoju, lista mebli w pokoju.
+  - Kluczowe komponenty widoku: Widok siatki, elementy mebli, akcja „Dodaj mebel”.
+  - UX, dostępność i względy bezpieczeństwa: Kliknięcie mebla otwiera modal; mebel z wyszukania podświetlany na czerwono.
+
+- Nazwa widoku: Edytor pokoju
+  - Ścieżka widoku: /rooms/new, /rooms/:roomId/edit
+  - Główny cel: Tworzenie/edycja pokoju wraz z rysowaniem siatki.
+  - Kluczowe informacje do wyświetlenia: Nazwa pokoju (max 100 znaków), paleta kolorów (do 20), siatka do 40x40.
+  - Kluczowe komponenty widoku: Formularz metadanych, edytor siatki, przyciski „Zapisz” i „Anuluj”.
+  - UX, dostępność i względy bezpieczeństwa: Zapis tylko po kliknięciu „Zapisz”; niezapisane zmiany przepadają; kratki muszą się stykać; kliknięcie usuwa zaznaczenie.
+
+- Nazwa widoku: Wyszukiwanie przedmiotów
+  - Ścieżka widoku: /search
+  - Główny cel: Znalezienie przedmiotu i przejście do właściwego mebla.
+  - Kluczowe informacje do wyświetlenia: Pole wyszukiwania, wyniki lub komunikat „Brak wyników”.
+  - Kluczowe komponenty widoku: Input zapytania, przycisk „Szukaj”, lista wyników.
+  - UX, dostępność i względy bezpieczeństwa: Wyszukiwanie po zatwierdzeniu, obsługa błędów API, nawigacja do pokoju z podświetleniem mebla.
+
+- Nazwa widoku: Edycja użytkownika
+  - Ścieżka widoku: /account
+  - Główny cel: Zarządzanie kontem użytkownika.
+  - Kluczowe informacje do wyświetlenia: Dane konta (zakres do doprecyzowania).
+  - Kluczowe komponenty widoku: Formularz profilu, przycisk wylogowania.
+  - UX, dostępność i względy bezpieczeństwa: Ochrona JWT, potwierdzenia akcji, obsługa 401.
+
+- Nazwa widoku: Onboarding (overlay)
+  - Ścieżka widoku: overlay nad /rooms i innymi kluczowymi widokami
+  - Główny cel: Wprowadzenie do podstawowych funkcji.
+  - Kluczowe informacje do wyświetlenia: Dymki wskazujące przyciski i elementy UI.
+  - Kluczowe komponenty widoku: Sekwencja kroków z „Dalej” i „Pomiń samouczek”.
+  - UX, dostępność i względy bezpieczeństwa: Blokada interakcji z UI do zakończenia lub pominięcia.
+
+- Nazwa widoku: Modal mebla i przedmiotów
+  - Ścieżka widoku: modal nad /rooms/:roomId
+  - Główny cel: Zarządzanie przedmiotami przypisanymi do mebla.
+  - Kluczowe informacje do wyświetlenia: Lista przedmiotów, pola dodawania wielu pozycji.
+  - Kluczowe komponenty widoku: Lista, przycisk „+” dodający pola, przyciski usuwania, przycisk „Zapisz”.
+  - UX, dostępność i względy bezpieczeństwa: Walidacja per pole, obsługa błędów częściowych, czerwony toast dla błędów serwera.
+
+## 3. Mapa podróży użytkownika
+
+Główny przypadek użycia (odnalezienie przedmiotu):
+1. Użytkownik loguje się (/login).
+2. Trafia do listy pokojów (/rooms).
+3. Przechodzi do wyszukiwania (/search), wpisuje zapytanie i zatwierdza.
+4. Z listy wyników wybiera przedmiot → aplikacja przechodzi do /rooms/:roomId.
+5. Odpowiedni mebel zostaje podświetlony na czerwono, a modal z przedmiotami otwiera się automatycznie.
+
+Przypadek dodania pokoju:
+1. Użytkownik w /rooms klika „Dodaj pokój”.
+2. Przechodzi do /rooms/new, wypełnia nazwę i kolor, rysuje siatkę.
+3. Zapisuje zmiany; zostaje przeniesiony do /rooms z odświeżoną listą.
+
+Przypadek zarządzania meblem i przedmiotami:
+1. Użytkownik w /rooms/:roomId klika mebel.
+2. Otwiera się modal z listą przedmiotów.
+3. Dodaje wiele pól i zapisuje, usuwa wybrane przedmioty.
+
+## 4. Układ i struktura nawigacji
+
+- Stały lewy panel nawigacyjny:
+  - „Pokoje” → /rooms
+  - „Wyszukiwanie” → /search
+  - „Edycja użytkownika” → /account
+- Główna przestrzeń robocza renderuje aktualny widok.
+- Nawigacja kontekstowa:
+  - Z listy pokojów do szczegółów pokoju (/rooms/:roomId).
+  - Z listy pokojów do edytora (/rooms/:roomId/edit).
+  - Z wyszukiwania do pokoju z podświetleniem mebla.
+- Modale (przedmioty) uruchamiane z poziomu widoku pokoju.
+
+## 5. Kluczowe komponenty
+
+- SidebarNavigation: stała nawigacja boczna.
+- RoomsList: lista pokojów z akcjami „Dodaj” i „Edytuj”.
+- RoomGridEditor: edytor siatki pokoju z walidacją spójności i limitów.
+- RoomView: widok pokoju z meblami i podświetlaniem.
+- FurnitureModal: modal zarządzania przedmiotami (dodawanie wielu, usuwanie, walidacja).
+- SearchPanel: formularz wyszukiwania i lista wyników.
+- OnboardingOverlay: sekwencja dymków z blokadą interakcji.
+- ToastNotifications: globalne komunikaty błędów (czerwone).
+
