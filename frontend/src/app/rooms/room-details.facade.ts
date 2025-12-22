@@ -44,20 +44,8 @@ export class RoomDetailsFacade {
     this.patchState({ isLoading: true, error: null, notFound: false });
 
     try {
-      const [room, furniture] = await Promise.all([
-        this.roomsApi.getRoom(trimmedId),
-        this.furnitureApi.listFurniture({ roomId: trimmedId }),
-      ]);
-
-      if (!room) {
-        this.patchState({
-          room: null,
-          furniture: [],
-          isLoading: false,
-          notFound: true,
-        });
-        return;
-      }
+      const room = await this.roomsApi.getRoom(trimmedId);
+      const furniture = await this.furnitureApi.listFurniture({ roomId: trimmedId });
 
       this.patchState({
         room,
@@ -66,6 +54,16 @@ export class RoomDetailsFacade {
       });
     } catch (err: unknown) {
       const error = toApiError(err);
+      if (error instanceof ApiError && error.status === 404) {
+        this.patchState({
+          isLoading: false,
+          notFound: true,
+          room: null,
+          furniture: [],
+          error: null,
+        });
+        return;
+      }
       this.patchState({ isLoading: false, error });
       throw error;
     }

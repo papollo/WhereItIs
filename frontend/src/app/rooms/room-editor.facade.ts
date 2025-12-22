@@ -2,7 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ApiError } from '../shared/api-error';
 import { RoomsApi } from './rooms.api';
-import type { CreateRoomCommand, RoomDto, UpdateRoomCommand } from './rooms.types';
+import type {
+  CreateRoomCommand,
+  CreateRoomResponseDto,
+  RoomDto,
+  UpdateRoomCommand,
+  UpdateRoomResponseDto,
+} from './rooms.types';
 
 export type RoomEditorState = {
   room: RoomDto | null;
@@ -45,23 +51,23 @@ export class RoomEditorFacade {
 
     try {
       const room = await this.roomsApi.getRoom(trimmedId);
-      if (!room) {
-        this.patchState({ isLoading: false, notFound: true, room: null });
-        return;
-      }
       this.patchState({ room, isLoading: false });
     } catch (err: unknown) {
       const error = toApiError(err);
+      if (error instanceof ApiError && error.status === 404) {
+        this.patchState({ isLoading: false, notFound: true, room: null, error: null });
+        return;
+      }
       this.patchState({ isLoading: false, error });
       throw error;
     }
   }
 
-  async createRoom(command: CreateRoomCommand): Promise<RoomDto> {
+  async createRoom(command: CreateRoomCommand): Promise<CreateRoomResponseDto> {
     this.patchState({ isSaving: true, error: null });
     try {
       const room = await this.roomsApi.createRoom(command);
-      this.patchState({ isSaving: false, room });
+      this.patchState({ isSaving: false });
       return room;
     } catch (err: unknown) {
       const error = toApiError(err);
@@ -70,11 +76,13 @@ export class RoomEditorFacade {
     }
   }
 
-  async updateRoom(roomId: string, command: UpdateRoomCommand): Promise<RoomDto> {
+  async updateRoom(roomId: string, command: UpdateRoomCommand): Promise<UpdateRoomResponseDto> {
     this.patchState({ isSaving: true, error: null });
     try {
       const room = await this.roomsApi.updateRoom(roomId, command);
-      this.patchState({ isSaving: false, room });
+      const current = this.stateSubject.getValue();
+      const nextRoom = current.room ? { ...current.room, ...room } : current.room;
+      this.patchState({ isSaving: false, room: nextRoom });
       return room;
     } catch (err: unknown) {
       const error = toApiError(err);

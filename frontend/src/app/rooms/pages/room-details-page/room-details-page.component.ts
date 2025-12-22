@@ -15,7 +15,6 @@ import {
 } from '../../../furniture/components/furniture-form-dialog.component';
 import { FurnitureListComponent } from '../../../furniture/components/furniture-list.component';
 import type { FurnitureListItemVM } from '../../../furniture/furniture.view-models';
-import { RoomGridPreviewComponent } from '../../components/room-grid-preview.component';
 import { RoomDetailsFacade } from '../../room-details.facade';
 
 @Component({
@@ -29,7 +28,6 @@ import { RoomDetailsFacade } from '../../room-details.facade';
     MatProgressSpinnerModule,
     MatSnackBarModule,
     RouterLink,
-    RoomGridPreviewComponent,
     FurnitureListComponent,
   ],
   templateUrl: './room-details-page.component.html',

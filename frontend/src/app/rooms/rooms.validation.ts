@@ -6,10 +6,6 @@ type CreateRoomField = keyof CreateRoomCommand;
 type ListRoomsField = keyof ListRoomsQuery;
 type UpdateRoomField = keyof UpdateRoomCommand;
 
-function isFiniteNumber(value: unknown): value is number {
-  return typeof value === 'number' && Number.isFinite(value);
-}
-
 function isInteger(value: unknown): value is number {
   return typeof value === 'number' && Number.isInteger(value);
 }
@@ -26,26 +22,6 @@ export function validateCreateRoomCommand(command: CreateRoomCommand): Record<st
 
   if (!HEX_COLOR_RE.test(command.color)) {
     errors.color = 'Color must be a hex value like #aabbcc';
-  }
-
-  if (!isFiniteNumber(command.x_start) || command.x_start < 0) {
-    errors.x_start = 'x_start must be a number >= 0';
-  }
-
-  if (!isFiniteNumber(command.y_start) || command.y_start < 0) {
-    errors.y_start = 'y_start must be a number >= 0';
-  }
-
-  if (!isInteger(command.width_cells) || command.width_cells < 1 || command.width_cells > 50) {
-    errors.width_cells = 'width_cells must be an integer between 1 and 50';
-  }
-
-  if (!isInteger(command.height_cells) || command.height_cells < 1 || command.height_cells > 50) {
-    errors.height_cells = 'height_cells must be an integer between 1 and 50';
-  }
-
-  if (!isFiniteNumber(command.cell_size_m) || command.cell_size_m !== 0.5) {
-    errors.cell_size_m = 'cell_size_m must be exactly 0.5';
   }
 
   if (Object.keys(errors).length === 0) {
@@ -85,12 +61,20 @@ export function validateListRoomsQuery(query: ListRoomsQuery): Record<string, st
     errors.orderBy = 'orderBy must be one of: created_at, name';
   }
 
+  if (query.sort !== undefined && query.sort !== 'created_at' && query.sort !== 'name') {
+    errors.sort = 'sort must be one of: created_at, name';
+  }
+
   if (
     query.orderDirection !== undefined &&
     query.orderDirection !== 'asc' &&
     query.orderDirection !== 'desc'
   ) {
     errors.orderDirection = 'orderDirection must be one of: asc, desc';
+  }
+
+  if (query.order !== undefined && query.order !== 'asc' && query.order !== 'desc') {
+    errors.order = 'order must be one of: asc, desc';
   }
 
   if (Object.keys(errors).length === 0) {
@@ -116,44 +100,7 @@ export function validateUpdateRoomCommand(command: UpdateRoomCommand): Record<st
     errors.color = 'Color must be a hex value like #aabbcc';
   }
 
-  if (command.x_start !== undefined && (!isFiniteNumber(command.x_start) || command.x_start < 0)) {
-    errors.x_start = 'x_start must be a number >= 0';
-  }
-
-  if (command.y_start !== undefined && (!isFiniteNumber(command.y_start) || command.y_start < 0)) {
-    errors.y_start = 'y_start must be a number >= 0';
-  }
-
-  if (
-    command.width_cells !== undefined &&
-    (!isInteger(command.width_cells) || command.width_cells < 1 || command.width_cells > 50)
-  ) {
-    errors.width_cells = 'width_cells must be an integer between 1 and 50';
-  }
-
-  if (
-    command.height_cells !== undefined &&
-    (!isInteger(command.height_cells) || command.height_cells < 1 || command.height_cells > 50)
-  ) {
-    errors.height_cells = 'height_cells must be an integer between 1 and 50';
-  }
-
-  if (
-    command.cell_size_m !== undefined &&
-    (!isFiniteNumber(command.cell_size_m) || command.cell_size_m !== 0.5)
-  ) {
-    errors.cell_size_m = 'cell_size_m must be exactly 0.5';
-  }
-
-  if (
-    command.name === undefined &&
-    command.color === undefined &&
-    command.x_start === undefined &&
-    command.y_start === undefined &&
-    command.width_cells === undefined &&
-    command.height_cells === undefined &&
-    command.cell_size_m === undefined
-  ) {
+  if (command.name === undefined && command.color === undefined) {
     errors.name = 'At least one field must be provided';
   }
 

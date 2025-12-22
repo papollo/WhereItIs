@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -7,14 +6,13 @@ import type { RoomListItemVM } from '../rooms.view-models';
 @Component({
   selector: 'app-room-card',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, DatePipe],
+  imports: [MatCardModule, MatButtonModule],
   template: `
     <mat-card class="room-card" (click)="open.emit(room.id)">
       <div class="room-card__color" [style.backgroundColor]="room.color" aria-hidden="true"></div>
       <div class="room-card__content">
         <div class="room-card__title">
           <h3>{{ room.name }}</h3>
-          <span class="room-card__meta">{{ room.updatedAt | date: 'mediumDate' }}</span>
         </div>
         <div class="room-card__actions">
           <button
@@ -72,11 +70,6 @@ import type { RoomListItemVM } from '../rooms.view-models';
       .room-card__title h3 {
         margin: 0;
         font-size: 1.1rem;
-      }
-
-      .room-card__meta {
-        font-size: 0.85rem;
-        color: rgba(0, 0, 0, 0.6);
       }
 
       .room-card__actions {

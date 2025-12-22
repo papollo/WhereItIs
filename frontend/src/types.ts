@@ -56,8 +56,8 @@ export type RoomCreateRequest = Pick<RoomRow, 'name' | 'color'>;
 export type RoomCreateResponse = Pick<RoomRow, 'id' | 'name' | 'color' | 'created_at'>;
 
 export type RoomDetailResponse = Pick<
-    RoomRow,
-    'id' | 'name' | 'color' | 'created_at' | 'updated_at'
+  RoomRow,
+  'id' | 'name' | 'color' | 'created_at' | 'updated_at'
 >;
 
 export type RoomUpdateRequest = Partial<Pick<RoomRow, 'name' | 'color'>>;
@@ -93,22 +93,22 @@ export type FurnitureListResponse = {
 
 export type FurnitureCreateRequest = Pick<FurnitureRow, 'name' | 'description' | 'color'>;
 export type FurnitureCreateResponse = Pick<
-    FurnitureRow,
-    'id' | 'room_id' | 'name' | 'color'
+  FurnitureRow,
+  'id' | 'room_id' | 'name' | 'color'
 >;
 
 export type FurnitureDetailResponse = Pick<
-    FurnitureRow,
-    'id' | 'room_id' | 'name' | 'description' | 'color'
+  FurnitureRow,
+  'id' | 'room_id' | 'name' | 'description' | 'color'
 >;
 
 export type FurnitureUpdateRequest = Partial<
-    Pick<FurnitureRow, 'name' | 'description' | 'color'>
+  Pick<FurnitureRow, 'name' | 'description' | 'color'>
 >;
 
 export type FurnitureUpdateResponse = Pick<
-    FurnitureRow,
-    'id' | 'name' | 'description' | 'color' | 'updated_at'
+  FurnitureRow,
+  'id' | 'name' | 'description' | 'color' | 'updated_at'
 >;
 
 // Furniture placements
@@ -163,8 +163,8 @@ export type OnboardingUpsertResponse = OnboardingRow;
 
 // Event logs
 export type EventLogCreateRequest = Pick<
-    EventLogRow,
-    'event_time' | 'message' | 'room_id' | 'furniture_id' | 'item_id'
+  EventLogRow,
+  'event_time' | 'message' | 'room_id' | 'furniture_id' | 'item_id'
 >;
 
 export type EventLogCreateResponse = Pick<EventLogRow, 'id' | 'message'>;

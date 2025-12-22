@@ -27,8 +27,8 @@ export class RoomsListFacade {
     this.patchState({ isLoading: true, error: null });
 
     try {
-      const rooms = await this.roomsApi.listRooms({ orderBy: 'created_at', orderDirection: 'desc' });
-      const roomsVm = rooms.map(mapRoomToListItem);
+      const response = await this.roomsApi.listRooms({ sort: 'created_at', order: 'desc' });
+      const roomsVm = response.data.map(mapRoomToListItem);
       this.patchState({ rooms: roomsVm, isLoading: false });
     } catch (err: unknown) {
       const error = toApiError(err);

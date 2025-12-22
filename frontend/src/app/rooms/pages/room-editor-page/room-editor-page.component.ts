@@ -8,13 +8,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiError } from '../../../shared/api-error';
 import { RoomEditorActionsComponent } from '../../components/room-editor-actions.component';
 import { RoomFormComponent, type RoomFormValue } from '../../components/room-form.component';
-import { RoomGridEditorComponent } from '../../components/room-grid-editor.component';
 import { RoomEditorFacade } from '../../room-editor.facade';
-import {
-  RoomGridEditorService,
-  type RoomGridCell,
-  type RoomGridState,
-} from '../../room-grid-editor.service';
 import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
 
 @Component({
@@ -28,7 +22,6 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
     MatSnackBarModule,
     RouterLink,
     RoomFormComponent,
-    RoomGridEditorComponent,
     RoomEditorActionsComponent,
   ],
   template: `
@@ -36,7 +29,7 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
       <header class="room-editor__header">
         <div>
           <h1>{{ isEdit ? 'Edytuj pokoj' : 'Nowy pokoj' }}</h1>
-          <p>Wypelnij dane i zaznacz ksztalt pokoju na siatce.</p>
+          <p>Wypelnij dane pokoju.</p>
         </div>
         <a mat-stroked-button routerLink="/rooms">Wroc do listy</a>
       </header>
@@ -54,15 +47,6 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
       <section class="room-editor__content" *ngIf="!state.notFound">
         <app-room-form [value]="formValue" (valueChange)="updateForm($event)"></app-room-form>
 
-        <div class="room-editor__grid">
-          <h2>Siatka pokoju</h2>
-          <p class="room-editor__hint">
-            Kliknij komorki, aby je zaznaczyc. Kolejne komorki musza sie stykac.
-          </p>
-          <app-room-grid-editor [grid]="gridState" (setCell)="setCell($event)"></app-room-grid-editor>
-          <p class="room-editor__error" *ngIf="validationError">{{ validationError }}</p>
-        </div>
-
         <app-room-editor-actions
           [canSave]="canSave()"
           [isSaving]="state.isSaving"
@@ -76,7 +60,6 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
 })
 export class RoomEditorPageComponent implements OnInit {
   private readonly facade = inject(RoomEditorFacade);
-  private readonly gridService = inject(RoomGridEditorService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
@@ -89,11 +72,8 @@ export class RoomEditorPageComponent implements OnInit {
     color: '#aabbcc',
   };
 
-  gridState: RoomGridState = this.gridService.createGrid(40, 40, false);
-
   isEdit = false;
   roomId = '';
-  validationError: string | null = null;
 
   constructor() {
     this.facade.state$
@@ -101,13 +81,6 @@ export class RoomEditorPageComponent implements OnInit {
       .subscribe((state) => {
         if (state.room) {
           this.formValue = { name: state.room.name, color: state.room.color };
-          const fullGrid = this.gridService.createGrid(40, 40, false);
-          this.gridState = this.gridService.fillRectangle(fullGrid, {
-            xStart: state.room.x_start,
-            yStart: state.room.y_start,
-            widthCells: state.room.width_cells,
-            heightCells: state.room.height_cells,
-          });
         }
       });
   }
@@ -123,20 +96,8 @@ export class RoomEditorPageComponent implements OnInit {
     this.formValue = value;
   }
 
-  setCell(payload: { cell: RoomGridCell; filled: boolean }): void {
-    const { cell, filled } = payload;
-    this.gridState = this.gridService.setCell(this.gridState, cell, filled);
-  }
-
   async save(): Promise<void> {
-    this.validationError = null;
-    const bounds = this.gridService.getBounds(this.gridState);
-    if (!bounds) {
-      this.validationError = 'Wybierz przynajmniej jedna komorke siatki.';
-      return;
-    }
-
-    const payload = this.buildPayload(bounds);
+    const payload = this.buildPayload();
 
     try {
       if (this.isEdit) {
@@ -168,20 +129,10 @@ export class RoomEditorPageComponent implements OnInit {
     return this.formValue.name.trim().length > 0 && this.formValue.color.trim().length > 0;
   }
 
-  private buildPayload(bounds: {
-    xStart: number;
-    yStart: number;
-    widthCells: number;
-    heightCells: number;
-  }): CreateRoomCommand {
+  private buildPayload(): CreateRoomCommand {
     return {
       name: this.formValue.name.trim(),
       color: this.formValue.color.trim(),
-      x_start: bounds.xStart,
-      y_start: bounds.yStart,
-      width_cells: bounds.widthCells,
-      height_cells: bounds.heightCells,
-      cell_size_m: 0.5,
     };
   }
 
@@ -216,12 +167,10 @@ export class RoomEditorPageComponent implements OnInit {
 
     this.isEdit = false;
     this.roomId = '';
-    this.validationError = null;
     this.formValue = {
       name: '',
       color: '#aabbcc',
     };
-    this.gridState = this.gridService.createGrid(40, 40, false);
     this.facade.reset();
   }
 }

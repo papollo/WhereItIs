@@ -1,11 +1,10 @@
 import type { ApiError } from '../shared/api-error';
-import type { RoomDto, UUID } from './rooms.types';
+import type { RoomListItemDto, UUID } from './rooms.types';
 
 export type RoomListItemVM = {
   id: UUID;
   name: string;
   color: string;
-  updatedAt: string;
 };
 
 export type RoomsListState = {
@@ -20,11 +19,10 @@ export const EMPTY_ROOMS_LIST_STATE: RoomsListState = {
   error: null,
 };
 
-export function mapRoomToListItem(room: RoomDto): RoomListItemVM {
+export function mapRoomToListItem(room: RoomListItemDto): RoomListItemVM {
   return {
     id: room.id,
     name: room.name,
     color: room.color,
-    updatedAt: room.updated_at,
   };
 }

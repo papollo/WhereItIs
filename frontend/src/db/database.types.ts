@@ -188,46 +188,31 @@ export type Database = {
             }
             rooms: {
                 Row: {
-                    cell_size_m: number
                     color: string
                     created_at: string
                     created_by: string
-                    height_cells: number
                     id: string
                     name: string
                     updated_at: string
                     user_id: string
-                    width_cells: number
-                    x_start: number
-                    y_start: number
                 }
                 Insert: {
-                    cell_size_m?: number
                     color?: string
                     created_at?: string
                     created_by: string
-                    height_cells: number
                     id?: string
                     name: string
                     updated_at?: string
                     user_id: string
-                    width_cells: number
-                    x_start: number
-                    y_start: number
                 }
                 Update: {
-                    cell_size_m?: number
                     color?: string
                     created_at?: string
                     created_by?: string
-                    height_cells?: number
                     id?: string
                     name?: string
                     updated_at?: string
                     user_id?: string
-                    width_cells?: number
-                    x_start?: number
-                    y_start?: number
                 }
                 Relationships: []
             }
@@ -367,4 +352,3 @@ export const Constants = {
         Enums: {},
     },
 } as const
-

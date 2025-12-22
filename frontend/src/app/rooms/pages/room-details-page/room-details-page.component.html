@@ -16,24 +16,12 @@
         <span class="room-details__color" [style.backgroundColor]="state.room.color"></span>
         <div>
           <h1>{{ state.room.name }}</h1>
-          <p>
-            Rozmiar: {{ state.room.width_cells }} x {{ state.room.height_cells }} komorek,
-            {{ state.room.cell_size_m }} m
-          </p>
         </div>
       </div>
       <button mat-flat-button color="primary" type="button" (click)="addFurniture(state.room.id)">
         Dodaj mebel
       </button>
     </header>
-
-    <section class="room-details__grid">
-      <app-room-grid-preview
-        [width]="state.room.width_cells"
-        [height]="state.room.height_cells"
-        [cellSizePx]="16"
-      ></app-room-grid-preview>
-    </section>
 
     <section class="room-details__furniture">
       <header class="room-details__section-header">

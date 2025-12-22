@@ -2,6 +2,7 @@ export type ApiErrorCode =
   | 'UNAUTHORIZED'
   | 'BAD_REQUEST'
   | 'VALIDATION_ERROR'
+  | 'NOT_FOUND'
   | 'ROOM_NAME_CONFLICT'
   | 'DB_CONSTRAINT_VIOLATION'
   | 'SUPABASE_ERROR';
@@ -42,6 +43,10 @@ export class ApiError extends Error {
     });
   }
 
+  static notFound(message = 'Not found'): ApiError {
+    return new ApiError({ status: 404, code: 'NOT_FOUND', message });
+  }
+
   static conflict(message: string, details?: Record<string, string>, cause?: unknown): ApiError {
     return new ApiError({ status: 409, code: 'ROOM_NAME_CONFLICT', message, details, cause });
   }
@@ -50,4 +55,3 @@ export class ApiError extends Error {
     return new ApiError({ status: 422, code: 'DB_CONSTRAINT_VIOLATION', message, details, cause });
   }
 }
-
