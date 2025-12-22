@@ -1,13 +1,23 @@
-import type { CreateFurnitureCommand, ListFurnitureQuery, UpdateFurnitureCommand } from './furniture.types';
+import type {
+  CreateFurnitureCommand,
+  FurniturePlacementUpsertRequest,
+  ListFurnitureQuery,
+  UpdateFurnitureCommand,
+} from './furniture.types';
 
 const HEX_COLOR_RE = /^#[0-9a-fA-F]{6}$/;
 
 const MAX_NAME_LENGTH = 150;
-const MAX_DESCRIPTION_LENGTH = 300;
+const MAX_DESCRIPTION_LENGTH = 500;
 
 type CreateFurnitureField = keyof CreateFurnitureCommand;
+type FurniturePlacementField = keyof FurniturePlacementUpsertRequest;
 type ListFurnitureField = keyof ListFurnitureQuery;
 type UpdateFurnitureField = keyof UpdateFurnitureCommand;
+
+function isInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value);
+}
 
 export function validateCreateFurnitureCommand(
   command: CreateFurnitureCommand
@@ -86,6 +96,37 @@ export function validateListFurnitureQuery(
     errors.roomId = 'Room id is required';
   }
 
+  if (typeof query.name === 'string') {
+    const trimmedName = query.name.trim();
+    if (trimmedName.length === 0) {
+      errors.name = 'Name filter cannot be empty';
+    } else if (trimmedName.length > MAX_NAME_LENGTH) {
+      errors.name = `Name filter must be at most ${MAX_NAME_LENGTH} characters`;
+    }
+  }
+
+  if (query.limit !== undefined) {
+    if (!Number.isInteger(query.limit) || query.limit < 1 || query.limit > 200) {
+      errors.limit = 'limit must be an integer between 1 and 200';
+    }
+  }
+
+  if (query.offset !== undefined) {
+    if (!Number.isInteger(query.offset) || query.offset < 0) {
+      errors.offset = 'offset must be an integer >= 0';
+    } else if (query.limit === undefined) {
+      errors.offset = 'offset requires limit to be set';
+    }
+  }
+
+  if (query.sort !== undefined && query.sort !== 'created_at' && query.sort !== 'name') {
+    errors.sort = 'sort must be one of: created_at, name';
+  }
+
+  if (query.order !== undefined && query.order !== 'asc' && query.order !== 'desc') {
+    errors.order = 'order must be one of: asc, desc';
+  }
+
   if (query.orderBy !== undefined && query.orderBy !== 'created_at' && query.orderBy !== 'name') {
     errors.orderBy = 'orderBy must be one of: created_at, name';
   }
@@ -111,4 +152,36 @@ export function validateFurnitureId(furnitureId: string): Record<string, string>
   }
 
   return null;
+}
+
+export function validateFurniturePlacementRequest(
+  request: FurniturePlacementUpsertRequest
+): Record<string, string> | null {
+  const errors: Partial<Record<FurniturePlacementField, string>> = {};
+
+  if (request.room_id.trim().length === 0) {
+    errors.room_id = 'Room id is required';
+  }
+
+  if (!isInteger(request.x) || request.x < 0 || request.x > 49) {
+    errors.x = 'x must be an integer between 0 and 49';
+  }
+
+  if (!isInteger(request.y) || request.y < 0 || request.y > 49) {
+    errors.y = 'y must be an integer between 0 and 49';
+  }
+
+  if (!isInteger(request.width_cells) || request.width_cells < 1 || request.width_cells > 50) {
+    errors.width_cells = 'width_cells must be an integer between 1 and 50';
+  }
+
+  if (!isInteger(request.height_cells) || request.height_cells < 1 || request.height_cells > 50) {
+    errors.height_cells = 'height_cells must be an integer between 1 and 50';
+  }
+
+  if (Object.keys(errors).length === 0) {
+    return null;
+  }
+
+  return errors as Record<string, string>;
 }

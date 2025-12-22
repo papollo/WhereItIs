@@ -130,6 +130,48 @@ export type Database = {
                     },
                 ]
             }
+            furniture_placements: {
+                Row: {
+                    furniture_id: string
+                    height_cells: number
+                    room_id: string
+                    width_cells: number
+                    x: number
+                    y: number
+                }
+                Insert: {
+                    furniture_id: string
+                    height_cells: number
+                    room_id: string
+                    width_cells: number
+                    x: number
+                    y: number
+                }
+                Update: {
+                    furniture_id?: string
+                    height_cells?: number
+                    room_id?: string
+                    width_cells?: number
+                    x?: number
+                    y?: number
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "furniture_placements_furniture_id_fkey"
+                        columns: ["furniture_id"]
+                        isOneToOne: true
+                        referencedRelation: "furniture"
+                        referencedColumns: ["id"]
+                    },
+                    {
+                        foreignKeyName: "furniture_placements_room_id_fkey"
+                        columns: ["room_id"]
+                        isOneToOne: false
+                        referencedRelation: "rooms"
+                        referencedColumns: ["id"]
+                    },
+                ]
+            }
             items: {
                 Row: {
                     created_at: string
