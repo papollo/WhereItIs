@@ -29,6 +29,10 @@ export class RoomEditorFacade {
 
   readonly state$ = this.stateSubject.asObservable();
 
+  reset(): void {
+    this.stateSubject.next(EMPTY_STATE);
+  }
+
   async load(roomId: string): Promise<void> {
     const trimmedId = roomId.trim();
     if (trimmedId.length === 0) {

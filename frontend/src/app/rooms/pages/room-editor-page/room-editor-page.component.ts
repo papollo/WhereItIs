@@ -113,16 +113,10 @@ export class RoomEditorPageComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    const roomId = this.route.snapshot.paramMap.get('roomId');
-    if (roomId) {
-      this.isEdit = true;
-      this.roomId = roomId;
-      try {
-        await this.facade.load(roomId);
-      } catch (err: unknown) {
-        this.showError(err);
-      }
-    }
+    this.route.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
+      const roomId = params.get('roomId');
+      void this.handleRoute(roomId);
+    });
   }
 
   updateForm(value: RoomFormValue): void {
@@ -206,5 +200,28 @@ export class RoomEditorPageComponent implements OnInit {
     }
 
     return 'Wystapil nieznany blad.';
+  }
+
+  private async handleRoute(roomId: string | null): Promise<void> {
+    if (roomId) {
+      this.isEdit = true;
+      this.roomId = roomId;
+      try {
+        await this.facade.load(roomId);
+      } catch (err: unknown) {
+        this.showError(err);
+      }
+      return;
+    }
+
+    this.isEdit = false;
+    this.roomId = '';
+    this.validationError = null;
+    this.formValue = {
+      name: '',
+      color: '#aabbcc',
+    };
+    this.gridState = this.gridService.createGrid(40, 40, false);
+    this.facade.reset();
   }
 }

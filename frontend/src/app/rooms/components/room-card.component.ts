@@ -46,6 +46,7 @@ import type { RoomListItemVM } from '../rooms.view-models';
         grid-template-columns: 12px 1fr;
         gap: 16px;
         cursor: pointer;
+        padding: 6px 8px 6px 0;
       }
 
       .room-card__color {
@@ -54,15 +55,18 @@ import type { RoomListItemVM } from '../rooms.view-models';
       }
 
       .room-card__content {
-        display: grid;
-        gap: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: nowrap;
       }
 
       .room-card__title {
         display: flex;
-        justify-content: space-between;
         align-items: baseline;
         gap: 12px;
+        white-space: nowrap;
       }
 
       .room-card__title h3 {
@@ -78,6 +82,7 @@ import type { RoomListItemVM } from '../rooms.view-models';
       .room-card__actions {
         display: flex;
         gap: 8px;
+        flex-shrink: 0;
       }
     `,
   ],
