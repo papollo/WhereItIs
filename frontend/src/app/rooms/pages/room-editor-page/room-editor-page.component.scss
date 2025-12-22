@@ -1,0 +1,63 @@
+.room-editor {
+  display: grid;
+  gap: 24px;
+}
+
+.room-editor__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.room-editor__header h1 {
+  margin: 0 0 4px;
+}
+
+.room-editor__header p {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.room-editor__loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.room-editor__content {
+  display: grid;
+  gap: 24px;
+}
+
+.room-editor__grid {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #f7f7f7;
+}
+
+.room-editor__hint {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.room-editor__error {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #fff4f4;
+  color: #8a2f2f;
+  border: 1px solid #f2c6c6;
+}
+
+.room-editor__empty {
+  display: grid;
+  gap: 8px;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+}

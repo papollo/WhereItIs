@@ -1,0 +1,39 @@
+<section class="room-editor" *ngIf="state$ | async as state">
+  <header class="room-editor__header">
+    <div>
+      <h1>{{ isEdit ? 'Edytuj pokoj' : 'Nowy pokoj' }}</h1>
+      <p>Wypelnij dane i zaznacz ksztalt pokoju na siatce.</p>
+    </div>
+    <a mat-stroked-button routerLink="/rooms">Wroc do listy</a>
+  </header>
+
+  <div class="room-editor__loading" *ngIf="state.isLoading">
+    <mat-progress-spinner diameter="32"></mat-progress-spinner>
+    <span>Laduje dane pokoju...</span>
+  </div>
+
+  <section *ngIf="state.notFound && !state.isLoading" class="room-editor__empty">
+    <h2>Nie znaleziono pokoju</h2>
+    <p>Sprawdz, czy link jest poprawny.</p>
+  </section>
+
+  <section class="room-editor__content" *ngIf="!state.notFound">
+    <app-room-form [value]="formValue" (valueChange)="updateForm($event)"></app-room-form>
+
+    <div class="room-editor__grid">
+      <h2>Siatka pokoju</h2>
+      <p class="room-editor__hint">
+        Kliknij komorki, aby je zaznaczyc. Kolejne komorki musza sie stykac.
+      </p>
+      <app-room-grid-editor [grid]="gridState" (setCell)="setCell($event)"></app-room-grid-editor>
+      <p class="room-editor__error" *ngIf="validationError">{{ validationError }}</p>
+    </div>
+
+    <app-room-editor-actions
+      [canSave]="canSave()"
+      [isSaving]="state.isSaving"
+      (save)="save()"
+      (cancel)="cancel()"
+    ></app-room-editor-actions>
+  </section>
+</section>

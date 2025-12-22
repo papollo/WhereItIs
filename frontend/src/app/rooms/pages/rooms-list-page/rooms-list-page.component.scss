@@ -1,0 +1,36 @@
+.rooms-list-page {
+  display: grid;
+  gap: 24px;
+}
+
+.rooms-list-page__content {
+  display: grid;
+  gap: 20px;
+}
+
+.rooms-list-page__loading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.rooms-list-page__error {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #fff4f4;
+  color: #8a2f2f;
+  border: 1px solid #f2c6c6;
+}
+
+.rooms-list-page__empty {
+  display: grid;
+  gap: 8px;
+  padding: 24px;
+  border-radius: 16px;
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+}
+
+.rooms-list-page__empty h2 {
+  margin: 0;
+}

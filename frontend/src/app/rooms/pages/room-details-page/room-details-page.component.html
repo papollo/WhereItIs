@@ -1,0 +1,63 @@
+<section class="room-details" *ngIf="state$ | async as state">
+  <div class="room-details__loading" *ngIf="state.isLoading">
+    <mat-progress-spinner diameter="32"></mat-progress-spinner>
+    <span>Laduje pokoj...</span>
+  </div>
+
+  <section *ngIf="state.notFound && !state.isLoading" class="room-details__empty">
+    <h1>Nie znaleziono pokoju</h1>
+    <p>Sprawdz, czy link jest poprawny.</p>
+    <button mat-stroked-button color="primary" routerLink="/rooms">Wroc do listy</button>
+  </section>
+
+  <section *ngIf="!state.notFound && state.room" class="room-details__content">
+    <header class="room-details__header">
+      <div class="room-details__title">
+        <span class="room-details__color" [style.backgroundColor]="state.room.color"></span>
+        <div>
+          <h1>{{ state.room.name }}</h1>
+          <p>
+            Rozmiar: {{ state.room.width_cells }} x {{ state.room.height_cells }} komorek,
+            {{ state.room.cell_size_m }} m
+          </p>
+        </div>
+      </div>
+      <button mat-flat-button color="primary" type="button" (click)="addFurniture(state.room.id)">
+        Dodaj mebel
+      </button>
+    </header>
+
+    <section class="room-details__grid">
+      <app-room-grid-preview
+        [width]="state.room.width_cells"
+        [height]="state.room.height_cells"
+        [cellSizePx]="16"
+      ></app-room-grid-preview>
+    </section>
+
+    <section class="room-details__furniture">
+      <header class="room-details__section-header">
+        <h2>Meble</h2>
+        <span>{{ state.furniture.length }} szt.</span>
+      </header>
+
+      <p class="room-details__error" *ngIf="state.error">{{ describeError(state.error) }}</p>
+
+      <app-furniture-list
+        *ngIf="state.furniture.length > 0"
+        [items]="state.furniture"
+        [highlightedId]="highlightedFurnitureId"
+        (open)="openFurniture(state.room.id, $event)"
+        (edit)="editFurniture(state.room.id, $event)"
+        (delete)="deleteFurniture($event)"
+      ></app-furniture-list>
+
+      <section class="room-details__empty" *ngIf="state.furniture.length === 0">
+        <p>Brak mebli w tym pokoju.</p>
+        <button mat-stroked-button color="primary" type="button" (click)="addFurniture(state.room.id)">
+          Dodaj pierwszy mebel
+        </button>
+      </section>
+    </section>
+  </section>
+</section>
