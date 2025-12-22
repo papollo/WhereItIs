@@ -12,6 +12,7 @@ import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
         class="grid-editor__grid"
         [style.gridTemplateColumns]="gridTemplateColumns"
         [style.--cell-size.px]="cellSizePx"
+        [style.--fill-color]="fillColor"
       >
         <button
           *ngFor="let cell of grid.cells; trackBy: trackByIndex"
@@ -50,7 +51,7 @@ import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
       }
 
       .grid-editor__cell--filled {
-        background: #212121;
+        background: var(--fill-color);
       }
     `,
   ],
@@ -58,6 +59,8 @@ import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
 export class RoomGridEditorComponent {
   @Input({ required: true }) grid!: RoomGridState;
   @Input() cellSizePx = 16;
+  @Input() fillColor = '#212121';
+  @Input() brushSize = 1;
   @Output() setCell = new EventEmitter<{ cell: RoomGridCell; filled: boolean }>();
 
   private isDragging = false;
@@ -78,7 +81,7 @@ export class RoomGridEditorComponent {
     this.suppressClick = true;
     this.isDragging = true;
     this.dragFill = !cell.filled;
-    this.setCell.emit({ cell, filled: this.dragFill });
+    this.applyBrush(cell, this.dragFill);
   }
 
   handlePointerEnter(cell: RoomGridCell): void {
@@ -86,7 +89,7 @@ export class RoomGridEditorComponent {
       return;
     }
 
-    this.setCell.emit({ cell, filled: this.dragFill });
+    this.applyBrush(cell, this.dragFill);
   }
 
   handleClick(cell: RoomGridCell): void {
@@ -95,10 +98,44 @@ export class RoomGridEditorComponent {
       return;
     }
 
-    this.setCell.emit({ cell, filled: !cell.filled });
+    this.applyBrush(cell, !cell.filled);
   }
 
   trackByIndex(index: number): number {
     return index;
+  }
+
+  private applyBrush(cell: RoomGridCell, filled: boolean): void {
+    const size = this.normalizeBrushSize(this.brushSize);
+    const radius = Math.floor(size / 2);
+
+    for (let y = cell.y - radius; y <= cell.y + radius; y += 1) {
+      for (let x = cell.x - radius; x <= cell.x + radius; x += 1) {
+        const target = this.getCellAt(x, y);
+        if (!target) {
+          continue;
+        }
+        this.setCell.emit({ cell: target, filled });
+      }
+    }
+  }
+
+  private getCellAt(x: number, y: number): RoomGridCell | null {
+    if (x < 0 || y < 0 || x >= this.grid.width || y >= this.grid.height) {
+      return null;
+    }
+
+    const index = y * this.grid.width + x;
+    return this.grid.cells[index] ?? null;
+  }
+
+  private normalizeBrushSize(size: number): number {
+    if (size <= 1) {
+      return 1;
+    }
+    if (size <= 3) {
+      return 3;
+    }
+    return 5;
   }
 }

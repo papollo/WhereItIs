@@ -2,6 +2,7 @@ import { AsyncPipe, NgIf } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
@@ -24,6 +25,7 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
     AsyncPipe,
     NgIf,
     MatButtonModule,
+    MatButtonToggleModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     RouterLink,
@@ -59,7 +61,22 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
           <p class="room-editor__hint">
             Kliknij komorki, aby je zaznaczyc. Kolejne komorki musza sie stykac.
           </p>
-          <app-room-grid-editor [grid]="gridState" (setCell)="setCell($event)"></app-room-grid-editor>
+          <mat-button-toggle-group
+            class="room-editor__brush"
+            [value]="brushSize"
+            (valueChange)="setBrushSize($event)"
+            aria-label="Rozmiar pedzla"
+          >
+            <mat-button-toggle [value]="1">1x1</mat-button-toggle>
+            <mat-button-toggle [value]="3">3x3</mat-button-toggle>
+            <mat-button-toggle [value]="5">5x5</mat-button-toggle>
+          </mat-button-toggle-group>
+          <app-room-grid-editor
+            [grid]="gridState"
+            [fillColor]="formValue.color"
+            [brushSize]="brushSize"
+            (setCell)="setCell($event)"
+          ></app-room-grid-editor>
           <p class="room-editor__error" *ngIf="validationError">{{ validationError }}</p>
         </div>
 
@@ -90,6 +107,7 @@ export class RoomEditorPageComponent implements OnInit {
   };
 
   gridState: RoomGridState = this.gridService.createGrid(40, 40, false);
+  brushSize = 1;
 
   isEdit = false;
   roomId = '';
@@ -121,6 +139,10 @@ export class RoomEditorPageComponent implements OnInit {
   setCell(payload: { cell: RoomGridCell; filled: boolean }): void {
     const { cell, filled } = payload;
     this.gridState = this.gridService.setCell(this.gridState, cell, filled);
+  }
+
+  setBrushSize(size: number): void {
+    this.brushSize = size;
   }
 
   async save(): Promise<void> {
