@@ -4,6 +4,7 @@ export type RoomGridCell = {
   x: number;
   y: number;
   filled: boolean;
+  allowed: boolean;
 };
 
 export type RoomGridState = {
@@ -12,6 +13,7 @@ export type RoomGridState = {
   cellSizeM: number;
   cells: RoomGridCell[];
   filled: Set<string>;
+  allowed?: Set<string>;
 };
 
 export type GridBounds = {
@@ -40,7 +42,7 @@ export class RoomGridEditorService {
         if (isFilled) {
           filled.add(this.key(x, y));
         }
-        cells.push({ x, y, filled: isFilled });
+        cells.push({ x, y, filled: isFilled, allowed: true });
       }
     }
 
@@ -94,6 +96,9 @@ export class RoomGridEditorService {
   setCell(state: RoomGridState, cell: RoomGridCell, filled: boolean): RoomGridState {
     const key = this.key(cell.x, cell.y);
     if (filled) {
+      if (state.allowed && !state.allowed.has(key)) {
+        return state;
+      }
       if (!this.canFillCell(state, cell)) {
         return state;
       }
@@ -146,6 +151,10 @@ export class RoomGridEditorService {
   }
 
   canFillCell(state: RoomGridState, cell: RoomGridCell): boolean {
+    if (state.allowed && !state.allowed.has(this.key(cell.x, cell.y))) {
+      return false;
+    }
+
     if (state.filled.size === 0) {
       return true;
     }
@@ -166,5 +175,26 @@ export class RoomGridEditorService {
 
   private key(x: number, y: number): string {
     return `${x}:${y}`;
+  }
+
+  applyAllowedCells(state: RoomGridState, cells: Array<{ x: number; y: number }>): RoomGridState {
+    const allowed = new Set(cells.map((cell) => this.key(cell.x, cell.y)));
+    state.allowed = allowed;
+
+    for (const key of Array.from(state.filled)) {
+      if (!allowed.has(key)) {
+        state.filled.delete(key);
+      }
+    }
+
+    state.cells.forEach((cell) => {
+      const key = this.key(cell.x, cell.y);
+      cell.allowed = allowed.has(key);
+      if (!cell.allowed) {
+        cell.filled = false;
+      }
+    });
+
+    return state;
   }
 }

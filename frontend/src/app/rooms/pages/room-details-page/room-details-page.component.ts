@@ -11,12 +11,12 @@ import { ApiError } from '../../../shared/api-error';
 import { ConfirmDialogComponent } from '../../../shared/confirm-dialog/confirm-dialog.component';
 import {
   FurnitureFormDialogComponent,
-  type FurnitureFormValue,
+  type FurnitureFormResult,
 } from '../../../furniture/components/furniture-form-dialog.component';
 import { FurnitureListComponent } from '../../../furniture/components/furniture-list.component';
 import type { FurnitureListItemVM } from '../../../furniture/furniture.view-models';
 import { RoomGridPreviewComponent } from '../../components/room-grid-preview.component';
-import { RoomDetailsFacade } from '../../room-details.facade';
+import { RoomDetailsFacade, type CreateFurniturePayload, type FurniturePlacementVM } from '../../room-details.facade';
 
 @Component({
   selector: 'app-room-details-page',
@@ -47,11 +47,13 @@ export class RoomDetailsPageComponent implements OnInit {
 
   highlightedFurnitureId?: string;
   private furnitureSnapshot: FurnitureListItemVM[] = [];
+  private placementSnapshot: FurniturePlacementVM[] = [];
 
   constructor() {
-    this.facade.state$
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe((state) => (this.furnitureSnapshot = state.furniture));
+    this.facade.state$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((state) => {
+      this.furnitureSnapshot = state.furniture;
+      this.placementSnapshot = state.placements;
+    });
 
     this.route.queryParamMap
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -79,6 +81,8 @@ export class RoomDetailsPageComponent implements OnInit {
       data: {
         title: 'Dodaj mebel',
         submitLabel: 'Zapisz',
+        roomId,
+        roomCells: this.facade.snapshotCells,
       },
     });
 
@@ -105,6 +109,9 @@ export class RoomDetailsPageComponent implements OnInit {
           description: current.description ?? '',
           color: current.color,
         },
+        roomId,
+        roomCells: this.facade.snapshotCells,
+        placement: this.placementSnapshot.find((item) => item.furniture_id === furnitureId),
       },
     });
 
@@ -114,7 +121,11 @@ export class RoomDetailsPageComponent implements OnInit {
     }
 
     try {
-      await this.facade.updateFurniture(furnitureId, normalizeFurnitureForm(value));
+      await this.facade.updateFurniture(
+        furnitureId,
+        normalizeFurniturePayload(value),
+        value.placement
+      );
       this.snackBar.open('Mebel zaktualizowany.', 'Zamknij', { duration: 3000 });
     } catch (err: unknown) {
       this.showError(err);
@@ -161,9 +172,13 @@ export class RoomDetailsPageComponent implements OnInit {
     return error.message;
   }
 
-  private async applyCreateFurniture(roomId: string, value: FurnitureFormValue): Promise<void> {
+  private async applyCreateFurniture(roomId: string, value: FurnitureFormResult): Promise<void> {
     try {
-      await this.facade.createFurniture(roomId, normalizeFurnitureForm(value));
+      await this.facade.createFurniture(
+        roomId,
+        normalizeFurniturePayload(value),
+        value.placement
+      );
       this.snackBar.open('Mebel dodany.', 'Zamknij', { duration: 3000 });
     } catch (err: unknown) {
       this.showError(err);
@@ -188,7 +203,7 @@ export class RoomDetailsPageComponent implements OnInit {
   }
 }
 
-function normalizeFurnitureForm(value: FurnitureFormValue): FurnitureFormValue {
+function normalizeFurniturePayload(value: FurnitureFormResult): CreateFurniturePayload {
   return {
     name: value.name.trim(),
     description: value.description.trim(),

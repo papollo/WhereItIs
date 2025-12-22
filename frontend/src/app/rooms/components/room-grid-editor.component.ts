@@ -19,6 +19,8 @@ import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
           type="button"
           class="grid-editor__cell"
           [class.grid-editor__cell--filled]="cell.filled"
+          [class.grid-editor__cell--disabled]="!cell.allowed"
+          [disabled]="!cell.allowed"
           (click)="handleClick(cell)"
           (pointerdown)="handlePointerDown(cell, $event)"
           (pointerenter)="handlePointerEnter(cell)"
@@ -52,6 +54,12 @@ import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
 
       .grid-editor__cell--filled {
         background: var(--fill-color);
+      }
+
+      .grid-editor__cell--disabled {
+        background: #f0f0f0;
+        border-style: dashed;
+        cursor: not-allowed;
       }
     `,
   ],
