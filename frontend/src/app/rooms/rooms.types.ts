@@ -5,6 +5,7 @@ export type UUID = string;
 export type RoomRow = Tables<'rooms'>;
 export type RoomInsert = TablesInsert<'rooms'>;
 export type RoomUpdate = TablesUpdate<'rooms'>;
+export type RoomCellRow = Tables<'room_cells'>;
 
 export type OffsetPaginationMeta = {
   limit: number;
@@ -57,3 +58,21 @@ export const ROOM_DTO_SELECT = 'id,name,color,created_at,updated_at' as const;
 export const ROOM_LIST_SELECT = 'id,name,color' as const;
 export const ROOM_CREATE_SELECT = 'id,name,color,created_at' as const;
 export const ROOM_UPDATE_SELECT = 'id,name,color,updated_at' as const;
+
+export type RoomCellDto = Pick<RoomCellRow, 'x' | 'y'>;
+
+export type RoomCellsGetResponseDto = {
+  room_id: RoomRow['id'];
+  cells: RoomCellDto[];
+};
+
+export type RoomCellsPutRequestDto = {
+  cells: RoomCellDto[];
+};
+
+export type RoomCellsPutResponseDto = {
+  room_id: RoomRow['id'];
+  cells_saved: number;
+};
+
+export const ROOM_CELLS_SELECT = 'x,y' as const;

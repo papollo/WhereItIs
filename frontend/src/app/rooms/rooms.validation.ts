@@ -1,4 +1,10 @@
-import type { CreateRoomCommand, ListRoomsQuery, UpdateRoomCommand } from './rooms.types';
+import type {
+  CreateRoomCommand,
+  ListRoomsQuery,
+  RoomCellDto,
+  RoomCellsPutRequestDto,
+  UpdateRoomCommand,
+} from './rooms.types';
 
 const HEX_COLOR_RE = /^#[0-9a-fA-F]{6}$/;
 
@@ -117,4 +123,27 @@ export function validateRoomId(roomId: string): Record<string, string> | null {
   }
 
   return null;
+}
+
+export function validateRoomCellsRequest(
+  request: RoomCellsPutRequestDto
+): Record<string, string> | null {
+  const errors: Record<string, string> = {};
+  const cells = request.cells;
+
+  if (!Array.isArray(cells) || cells.length === 0) {
+    errors['cells'] = 'At least one cell is required';
+    return errors;
+  }
+
+  cells.forEach((cell: RoomCellDto, index: number) => {
+    if (!isInteger(cell.x) || cell.x < 0 || cell.x > 49) {
+      errors[`cells.${index}.x`] = 'x must be an integer between 0 and 49';
+    }
+    if (!isInteger(cell.y) || cell.y < 0 || cell.y > 49) {
+      errors[`cells.${index}.y`] = 'y must be an integer between 0 and 49';
+    }
+  });
+
+  return Object.keys(errors).length === 0 ? null : errors;
 }

@@ -186,6 +186,32 @@ export type Database = {
                 }
                 Relationships: []
             }
+            room_cells: {
+                Row: {
+                    room_id: string
+                    x: number
+                    y: number
+                }
+                Insert: {
+                    room_id: string
+                    x: number
+                    y: number
+                }
+                Update: {
+                    room_id?: string
+                    x?: number
+                    y?: number
+                }
+                Relationships: [
+                    {
+                        foreignKeyName: "room_cells_room_id_fkey"
+                        columns: ["room_id"]
+                        isOneToOne: false
+                        referencedRelation: "rooms"
+                        referencedColumns: ["id"]
+                    },
+                ]
+            }
             rooms: {
                 Row: {
                     color: string

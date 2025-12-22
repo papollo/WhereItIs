@@ -8,7 +8,13 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiError } from '../../../shared/api-error';
 import { RoomEditorActionsComponent } from '../../components/room-editor-actions.component';
 import { RoomFormComponent, type RoomFormValue } from '../../components/room-form.component';
+import { RoomGridEditorComponent } from '../../components/room-grid-editor.component';
 import { RoomEditorFacade } from '../../room-editor.facade';
+import {
+  RoomGridEditorService,
+  type RoomGridCell,
+  type RoomGridState,
+} from '../../room-grid-editor.service';
 import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
 
 @Component({
@@ -22,6 +28,7 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
     MatSnackBarModule,
     RouterLink,
     RoomFormComponent,
+    RoomGridEditorComponent,
     RoomEditorActionsComponent,
   ],
   template: `
@@ -29,7 +36,7 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
       <header class="room-editor__header">
         <div>
           <h1>{{ isEdit ? 'Edytuj pokoj' : 'Nowy pokoj' }}</h1>
-          <p>Wypelnij dane pokoju.</p>
+          <p>Wypelnij dane i zaznacz ksztalt pokoju na siatce.</p>
         </div>
         <a mat-stroked-button routerLink="/rooms">Wroc do listy</a>
       </header>
@@ -47,6 +54,15 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
       <section class="room-editor__content" *ngIf="!state.notFound">
         <app-room-form [value]="formValue" (valueChange)="updateForm($event)"></app-room-form>
 
+        <div class="room-editor__grid">
+          <h2>Siatka pokoju</h2>
+          <p class="room-editor__hint">
+            Kliknij komorki, aby je zaznaczyc. Kolejne komorki musza sie stykac.
+          </p>
+          <app-room-grid-editor [grid]="gridState" (setCell)="setCell($event)"></app-room-grid-editor>
+          <p class="room-editor__error" *ngIf="validationError">{{ validationError }}</p>
+        </div>
+
         <app-room-editor-actions
           [canSave]="canSave()"
           [isSaving]="state.isSaving"
@@ -60,6 +76,7 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
 })
 export class RoomEditorPageComponent implements OnInit {
   private readonly facade = inject(RoomEditorFacade);
+  private readonly gridService = inject(RoomGridEditorService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
@@ -72,8 +89,11 @@ export class RoomEditorPageComponent implements OnInit {
     color: '#aabbcc',
   };
 
+  gridState: RoomGridState = this.gridService.createGrid(40, 40, false);
+
   isEdit = false;
   roomId = '';
+  validationError: string | null = null;
 
   constructor() {
     this.facade.state$
@@ -81,6 +101,8 @@ export class RoomEditorPageComponent implements OnInit {
       .subscribe((state) => {
         if (state.room) {
           this.formValue = { name: state.room.name, color: state.room.color };
+          const nextGrid = this.gridService.createGrid(40, 40, false);
+          this.gridState = this.gridService.applyCells(nextGrid, state.cells);
         }
       });
   }
@@ -96,15 +118,29 @@ export class RoomEditorPageComponent implements OnInit {
     this.formValue = value;
   }
 
+  setCell(payload: { cell: RoomGridCell; filled: boolean }): void {
+    const { cell, filled } = payload;
+    this.gridState = this.gridService.setCell(this.gridState, cell, filled);
+  }
+
   async save(): Promise<void> {
+    this.validationError = null;
+    const filledCells = this.gridService.getFilledCells(this.gridState);
+    if (filledCells.length === 0) {
+      this.validationError = 'Wybierz przynajmniej jedna komorke siatki.';
+      return;
+    }
+
     const payload = this.buildPayload();
 
     try {
       if (this.isEdit) {
         await this.facade.updateRoom(this.roomId, payload as UpdateRoomCommand);
+        await this.facade.replaceRoomCells(this.roomId, filledCells);
         this.snackBar.open('Pokoj zaktualizowany.', 'Zamknij', { duration: 3000 });
       } else {
         const created = await this.facade.createRoom(payload as CreateRoomCommand);
+        await this.facade.replaceRoomCells(created.id, filledCells);
         this.snackBar.open('Pokoj utworzony.', 'Zamknij', { duration: 3000 });
         void this.router.navigate(['/rooms', created.id]);
         return;
@@ -167,10 +203,12 @@ export class RoomEditorPageComponent implements OnInit {
 
     this.isEdit = false;
     this.roomId = '';
+    this.validationError = null;
     this.formValue = {
       name: '',
       color: '#aabbcc',
     };
+    this.gridState = this.gridService.createGrid(40, 40, false);
     this.facade.reset();
   }
 }

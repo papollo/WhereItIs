@@ -5,6 +5,7 @@ import { RoomsApi } from './rooms.api';
 import type {
   CreateRoomCommand,
   CreateRoomResponseDto,
+  RoomCellDto,
   RoomDto,
   UpdateRoomCommand,
   UpdateRoomResponseDto,
@@ -12,6 +13,7 @@ import type {
 
 export type RoomEditorState = {
   room: RoomDto | null;
+  cells: RoomCellDto[];
   isLoading: boolean;
   isSaving: boolean;
   error: ApiError | null;
@@ -20,6 +22,7 @@ export type RoomEditorState = {
 
 const EMPTY_STATE: RoomEditorState = {
   room: null,
+  cells: [],
   isLoading: false,
   isSaving: false,
   error: null,
@@ -50,12 +53,21 @@ export class RoomEditorFacade {
     this.patchState({ isLoading: true, error: null, notFound: false });
 
     try {
-      const room = await this.roomsApi.getRoom(trimmedId);
-      this.patchState({ room, isLoading: false });
+      const [room, cells] = await Promise.all([
+        this.roomsApi.getRoom(trimmedId),
+        this.roomsApi.getRoomCells(trimmedId),
+      ]);
+      this.patchState({ room, cells: cells.cells, isLoading: false });
     } catch (err: unknown) {
       const error = toApiError(err);
       if (error instanceof ApiError && error.status === 404) {
-        this.patchState({ isLoading: false, notFound: true, room: null, error: null });
+        this.patchState({
+          isLoading: false,
+          notFound: true,
+          room: null,
+          cells: [],
+          error: null,
+        });
         return;
       }
       this.patchState({ isLoading: false, error });
@@ -84,6 +96,18 @@ export class RoomEditorFacade {
       const nextRoom = current.room ? { ...current.room, ...room } : current.room;
       this.patchState({ isSaving: false, room: nextRoom });
       return room;
+    } catch (err: unknown) {
+      const error = toApiError(err);
+      this.patchState({ isSaving: false, error });
+      throw error;
+    }
+  }
+
+  async replaceRoomCells(roomId: string, cells: RoomCellDto[]): Promise<void> {
+    this.patchState({ isSaving: true, error: null });
+    try {
+      await this.roomsApi.replaceRoomCells(roomId, { cells });
+      this.patchState({ isSaving: false, cells });
     } catch (err: unknown) {
       const error = toApiError(err);
       this.patchState({ isSaving: false, error });

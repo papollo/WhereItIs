@@ -51,6 +51,11 @@
   overflow: hidden;
 }
 
+.room-details__hint {
+  margin: 12px 0 0;
+  color: rgba(0, 0, 0, 0.6);
+}
+
 .room-details__furniture {
   display: grid;
   gap: 16px;

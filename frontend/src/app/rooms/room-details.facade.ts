@@ -5,10 +5,11 @@ import { FurnitureApi } from '../furniture/furniture.api';
 import type { FurnitureListItemVM } from '../furniture/furniture.view-models';
 import { mapFurnitureToListItem } from '../furniture/furniture.view-models';
 import { RoomsApi } from './rooms.api';
-import type { RoomDto, UUID } from './rooms.types';
+import type { RoomCellDto, RoomDto, UUID } from './rooms.types';
 
 export type RoomDetailsState = {
   room: RoomDto | null;
+  cells: RoomCellDto[];
   furniture: FurnitureListItemVM[];
   isLoading: boolean;
   error: ApiError | null;
@@ -17,6 +18,7 @@ export type RoomDetailsState = {
 
 const EMPTY_STATE: RoomDetailsState = {
   room: null,
+  cells: [],
   furniture: [],
   isLoading: false,
   error: null,
@@ -44,11 +46,15 @@ export class RoomDetailsFacade {
     this.patchState({ isLoading: true, error: null, notFound: false });
 
     try {
-      const room = await this.roomsApi.getRoom(trimmedId);
-      const furniture = await this.furnitureApi.listFurniture({ roomId: trimmedId });
+      const [room, cells, furniture] = await Promise.all([
+        this.roomsApi.getRoom(trimmedId),
+        this.roomsApi.getRoomCells(trimmedId),
+        this.furnitureApi.listFurniture({ roomId: trimmedId }),
+      ]);
 
       this.patchState({
         room,
+        cells: cells.cells,
         furniture: furniture.map(mapFurnitureToListItem),
         isLoading: false,
       });
@@ -59,6 +65,7 @@ export class RoomDetailsFacade {
           isLoading: false,
           notFound: true,
           room: null,
+          cells: [],
           furniture: [],
           error: null,
         });

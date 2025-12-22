@@ -7,23 +7,34 @@ import type {
   ListRoomsQuery,
   CreateRoomResponseDto,
   RoomDto,
+  RoomCellsGetResponseDto,
+  RoomCellsPutRequestDto,
+  RoomCellsPutResponseDto,
   RoomsListResponseDto,
   UpdateRoomResponseDto,
   UpdateRoomCommand,
   UUID,
 } from './rooms.types';
-import { ROOM_CREATE_SELECT, ROOM_DTO_SELECT, ROOM_LIST_SELECT, ROOM_UPDATE_SELECT } from './rooms.types';
+import {
+  ROOM_CELLS_SELECT,
+  ROOM_CREATE_SELECT,
+  ROOM_DTO_SELECT,
+  ROOM_LIST_SELECT,
+  ROOM_UPDATE_SELECT,
+} from './rooms.types';
 import { ApiError } from '../shared/api-error';
 import {
   mapCreateRoomPostgrestError,
   mapDeleteRoomPostgrestError,
   mapGetRoomPostgrestError,
   mapListRoomsPostgrestError,
+  mapRoomCellsPostgrestError,
   mapUpdateRoomPostgrestError,
 } from './rooms.errors';
 import {
   validateCreateRoomCommand,
   validateListRoomsQuery,
+  validateRoomCellsRequest,
   validateRoomId,
   validateUpdateRoomCommand,
 } from './rooms.validation';
@@ -183,5 +194,78 @@ export class RoomsApi {
     if (!data) {
       throw ApiError.notFound('Room not found');
     }
+  }
+
+  async getRoomCells(roomId: UUID): Promise<RoomCellsGetResponseDto> {
+    const idErrors = validateRoomId(roomId);
+    if (idErrors) {
+      throw ApiError.validation(idErrors);
+    }
+
+    const { data, error, status } = await this.supabase
+      .getClient()
+      .from('room_cells')
+      .select(ROOM_CELLS_SELECT)
+      .eq('room_id', roomId)
+      .order('y', { ascending: true })
+      .order('x', { ascending: true });
+
+    if (error) {
+      throw mapRoomCellsPostgrestError(error, status);
+    }
+
+    return {
+      room_id: roomId,
+      cells: data ?? [],
+    };
+  }
+
+  async replaceRoomCells(
+    roomId: UUID,
+    request: RoomCellsPutRequestDto
+  ): Promise<RoomCellsPutResponseDto> {
+    const idErrors = validateRoomId(roomId);
+    if (idErrors) {
+      throw ApiError.validation(idErrors);
+    }
+
+    const validationErrors = validateRoomCellsRequest(request);
+    if (validationErrors) {
+      throw ApiError.validation(validationErrors);
+    }
+
+    const client = this.supabase.getClient();
+
+    const { error: deleteError, status: deleteStatus } = await client
+      .from('room_cells')
+      .delete()
+      .eq('room_id', roomId);
+
+    if (deleteError) {
+      throw mapRoomCellsPostgrestError(deleteError, deleteStatus);
+    }
+
+    const payload = request.cells.map((cell) => ({
+      room_id: roomId,
+      x: cell.x,
+      y: cell.y,
+    }));
+
+    if (payload.length === 0) {
+      return { room_id: roomId, cells_saved: 0 };
+    }
+
+    const { error: insertError, status: insertStatus } = await client
+      .from('room_cells')
+      .insert(payload);
+
+    if (insertError) {
+      throw mapRoomCellsPostgrestError(insertError, insertStatus);
+    }
+
+    return {
+      room_id: roomId,
+      cells_saved: payload.length,
+    };
   }
 }

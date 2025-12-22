@@ -67,6 +67,30 @@ export class RoomGridEditorService {
     return state;
   }
 
+  applyCells(state: RoomGridState, cells: Array<{ x: number; y: number }>): RoomGridState {
+    state.filled.clear();
+    state.cells.forEach((cell) => {
+      cell.filled = false;
+    });
+
+    cells.forEach((coord) => {
+      const cell = state.cells.find((item) => item.x === coord.x && item.y === coord.y);
+      if (!cell) {
+        return;
+      }
+      this.setCell(state, cell, true);
+    });
+
+    return state;
+  }
+
+  getFilledCells(state: RoomGridState): Array<{ x: number; y: number }> {
+    return Array.from(state.filled.values()).map((value) => {
+      const [x, y] = value.split(':').map((part) => Number.parseInt(part, 10));
+      return { x, y };
+    });
+  }
+
   setCell(state: RoomGridState, cell: RoomGridCell, filled: boolean): RoomGridState {
     const key = this.key(cell.x, cell.y);
     if (filled) {
