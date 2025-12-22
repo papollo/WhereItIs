@@ -9,36 +9,42 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
   standalone: true,
   imports: [MatCardModule, MatButtonModule, DatePipe, NgIf],
   template: `
-    <mat-card class="furniture-card" [class.furniture-card--highlight]="highlighted">
-      <div class="furniture-card__header" (click)="open.emit(item.id)">
-        <div class="furniture-card__color" [style.backgroundColor]="item.color" aria-hidden="true"></div>
-        <div>
-          <h3>{{ item.name }}</h3>
+    <mat-card class="furniture-card">
+      <div class="furniture-card__row">
+        <div
+          class="furniture-card__color"
+          [style.backgroundColor]="item.color"
+          aria-hidden="true"
+        ></div>
+        <div class="furniture-card__text" (click)="open.emit(item.id)">
+          <div class="furniture-card__header">
+            <h3>{{ item.name }}</h3>
+            <span class="furniture-card__meta"
+              >Aktualizacja: {{ item.updatedAt | date: 'mediumDate' }}</span
+            >
+          </div>
           <p *ngIf="item.description">{{ item.description }}</p>
         </div>
-      </div>
-      <div class="furniture-card__meta">
-        <span>Aktualizacja: {{ item.updatedAt | date: 'mediumDate' }}</span>
-      </div>
-      <div class="furniture-card__actions">
-        <button
-          mat-stroked-button
-          color="primary"
-          type="button"
-          (click)="handleEdit($event)"
-          aria-label="Edytuj mebel"
-        >
-          Edytuj
-        </button>
-        <button
-          mat-stroked-button
-          color="warn"
-          type="button"
-          (click)="handleDelete($event)"
-          aria-label="Usun mebel"
-        >
-          Usun
-        </button>
+        <div class="furniture-card__actions">
+          <button
+            mat-stroked-button
+            color="primary"
+            type="button"
+            (click)="handleEdit($event)"
+            aria-label="Edytuj mebel"
+          >
+            Edytuj
+          </button>
+          <button
+            mat-stroked-button
+            color="warn"
+            type="button"
+            (click)="handleDelete($event)"
+            aria-label="Usun mebel"
+          >
+            Usun
+          </button>
+        </div>
       </div>
     </mat-card>
   `,
@@ -46,25 +52,36 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
     `
       .furniture-card {
         display: grid;
-        gap: 12px;
+        padding: 12px 16px;
         border-left: 4px solid transparent;
       }
 
-      .furniture-card--highlight {
-        border-left-color: #e53935;
-        background: #ffebee;
-      }
 
-      .furniture-card__header {
+      .furniture-card__row {
         display: grid;
-        grid-template-columns: 12px 1fr;
-        gap: 12px;
-        cursor: pointer;
+        grid-template-columns: 12px minmax(0, 1fr) auto;
+        gap: 16px;
+        align-items: start;
       }
 
       .furniture-card__color {
         width: 12px;
+        min-height: 36px;
+        border: 1px solid rgba(0, 0, 0, 0.2);
         border-radius: 8px;
+        align-self: stretch;
+      }
+
+      .furniture-card__text {
+        min-width: 0;
+        cursor: pointer;
+      }
+
+      .furniture-card__header {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        flex-wrap: wrap;
       }
 
       .furniture-card__header h3 {
@@ -74,17 +91,21 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
       .furniture-card__header p {
         margin: 0;
         color: rgba(0, 0, 0, 0.6);
+        word-break: break-word;
       }
 
       .furniture-card__meta {
         font-size: 0.85rem;
         color: rgba(0, 0, 0, 0.6);
+        white-space: nowrap;
       }
 
       .furniture-card__actions {
         display: flex;
         gap: 8px;
+        justify-self: end;
       }
+
     `,
   ],
 })

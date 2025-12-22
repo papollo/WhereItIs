@@ -48,39 +48,41 @@ export type FurnitureFormDialogData = {
   ],
   template: `
     <h2 mat-dialog-title>{{ data.title }}</h2>
-    <form [formGroup]="form" (ngSubmit)="submit()" mat-dialog-content>
-      <mat-form-field appearance="outline" class="field">
-        <mat-label>Nazwa mebla</mat-label>
-        <input matInput formControlName="name" maxlength="150" />
-        <mat-error *ngIf="form.controls.name.hasError('required')">Nazwa jest wymagana.</mat-error>
-        <mat-error *ngIf="form.controls.name.hasError('maxlength')">
-          Maksymalnie 150 znakow.
-        </mat-error>
-      </mat-form-field>
+    <form [formGroup]="form" (ngSubmit)="submit()" mat-dialog-content class="furniture-form">
+      <div class="furniture-form__fields">
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Nazwa mebla</mat-label>
+          <input matInput formControlName="name" maxlength="150" />
+          <mat-error *ngIf="form.controls.name.hasError('required')">Nazwa jest wymagana.</mat-error>
+          <mat-error *ngIf="form.controls.name.hasError('maxlength')">
+            Maksymalnie 150 znakow.
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field appearance="outline" class="field">
-        <mat-label>Opis</mat-label>
-        <textarea matInput rows="3" formControlName="description" maxlength="500"></textarea>
-        <mat-hint align="end">{{ form.controls.description.value.length }}/500</mat-hint>
-      </mat-form-field>
+        <mat-form-field appearance="outline" class="field">
+          <mat-label>Opis</mat-label>
+          <textarea matInput rows="3" formControlName="description" maxlength="500"></textarea>
+          <mat-hint align="end">{{ form.controls.description.value.length }}/500</mat-hint>
+        </mat-form-field>
 
-      <section class="color-picker">
-        <div class="color-picker__label">Kolor</div>
-        <div class="color-picker__swatches">
-          <button
-            *ngFor="let color of palette; trackBy: trackByColor"
-            type="button"
-            class="color-picker__swatch"
-            [style.backgroundColor]="color"
-            [class.color-picker__swatch--selected]="form.controls.color.value === color"
-            (click)="selectColor(color)"
-            [attr.aria-label]="'Kolor ' + color"
-          ></button>
-        </div>
-        <p class="color-picker__error" *ngIf="form.controls.color.hasError('required')">
-          Kolor jest wymagany.
-        </p>
-      </section>
+        <section class="color-picker">
+          <div class="color-picker__label">Kolor</div>
+          <div class="color-picker__swatches">
+            <button
+              *ngFor="let color of palette; trackBy: trackByColor"
+              type="button"
+              class="color-picker__swatch"
+              [style.backgroundColor]="color"
+              [class.color-picker__swatch--selected]="form.controls.color.value === color"
+              (click)="selectColor(color)"
+              [attr.aria-label]="'Kolor ' + color"
+            ></button>
+          </div>
+          <p class="color-picker__error" *ngIf="form.controls.color.hasError('required')">
+            Kolor jest wymagany.
+          </p>
+        </section>
+      </div>
 
       <section class="placement" *ngIf="gridState">
         <h3>Ustawienie mebla</h3>
@@ -107,10 +109,26 @@ export type FurnitureFormDialogData = {
         width: 100%;
       }
 
-      form {
+      .furniture-form {
+        display: grid;
+        gap: 16px;
+        min-width: 320px;
+      }
+
+      .furniture-form__fields {
         display: grid;
         gap: 12px;
-        min-width: 320px;
+      }
+
+      @media (min-width: 720px) {
+        .furniture-form {
+          grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+          align-items: start;
+        }
+
+        .placement {
+          margin-top: 0;
+        }
       }
 
       .placement {
@@ -177,6 +195,7 @@ export type FurnitureFormDialogData = {
 })
 export class FurnitureFormDialogComponent {
   private readonly gridService = inject(RoomGridEditorService);
+  private gridOffset = { x: 0, y: 0 };
 
   readonly form: FormGroup<{
     name: FormControl<string>;
@@ -221,15 +240,29 @@ export class FurnitureFormDialogComponent {
     });
 
     if (this.data.roomCells && this.data.roomCells.length > 0) {
-      const grid = this.gridService.createGrid(40, 40, false);
-      this.gridState = this.gridService.applyAllowedCells(grid, this.data.roomCells);
-      if (this.data.placement) {
-        this.gridService.fillRectangle(this.gridState, {
-          xStart: this.data.placement.x,
-          yStart: this.data.placement.y,
-          widthCells: this.data.placement.width_cells,
-          heightCells: this.data.placement.height_cells,
-        });
+      const bounds = this.getRoomCellsBounds(this.data.roomCells);
+      if (bounds) {
+        const widthWithPadding = bounds.width + 4;
+        const heightWithPadding = bounds.height + 4;
+        this.gridOffset = {
+          x: 2 - bounds.minX,
+          y: 2 - bounds.minY,
+        };
+
+        const grid = this.gridService.createGrid(widthWithPadding, heightWithPadding, false);
+        const shiftedCells = this.data.roomCells.map((cell) => ({
+          x: cell.x + this.gridOffset.x,
+          y: cell.y + this.gridOffset.y,
+        }));
+        this.gridState = this.gridService.applyAllowedCells(grid, shiftedCells);
+        if (this.data.placement) {
+          this.gridService.fillRectangle(this.gridState, {
+            xStart: this.data.placement.x + this.gridOffset.x,
+            yStart: this.data.placement.y + this.gridOffset.y,
+            widthCells: this.data.placement.width_cells,
+            heightCells: this.data.placement.height_cells,
+          });
+        }
       }
     }
   }
@@ -262,8 +295,8 @@ export class FurnitureFormDialogComponent {
         ...value,
         placement: {
           room_id: this.data.roomId,
-          x: bounds.xStart,
-          y: bounds.yStart,
+          x: bounds.xStart - this.gridOffset.x,
+          y: bounds.yStart - this.gridOffset.y,
           width_cells: bounds.widthCells,
           height_cells: bounds.heightCells,
         },
@@ -287,5 +320,27 @@ export class FurnitureFormDialogComponent {
       return color;
     }
     return this.palette[0];
+  }
+
+  private getRoomCellsBounds(
+    cells: RoomCellDto[]
+  ): { minX: number; minY: number; width: number; height: number } | null {
+    if (cells.length === 0) {
+      return null;
+    }
+
+    const xs = cells.map((cell) => cell.x);
+    const ys = cells.map((cell) => cell.y);
+    const minX = Math.min(...xs);
+    const maxX = Math.max(...xs);
+    const minY = Math.min(...ys);
+    const maxY = Math.max(...ys);
+
+    return {
+      minX,
+      minY,
+      width: maxX - minX + 1,
+      height: maxY - minY + 1,
+    };
   }
 }
