@@ -9,7 +9,7 @@
         {
           "name": "Sofa",
           "description": "Sofa trzyosobowa",
-          "color": "#c28a6b",
+          "color": "#ff1744",
           "placement": { "x": 1, "y": 1, "width_cells": 2, "height_cells": 2 },
           "items": [
             { "name": "Poduszka dekoracyjna" },
@@ -27,7 +27,7 @@
         {
           "name": "Stolik kawowy",
           "description": "Stolik kawowy z polka",
-          "color": "#8c6a4f",
+          "color": "#ff6d00",
           "placement": { "x": 4, "y": 2, "width_cells": 1, "height_cells": 1 },
           "items": [
             { "name": "Miska" },
@@ -45,7 +45,7 @@
         {
           "name": "Szafka RTV",
           "description": "Szafka pod telewizor",
-          "color": "#6f5845",
+          "color": "#ffea00",
           "placement": { "x": 8, "y": 1, "width_cells": 2, "height_cells": 1 },
           "items": [
             { "name": "Dekoder" },
@@ -63,7 +63,7 @@
         {
           "name": "Regal",
           "description": "Regal na ksiazki",
-          "color": "#7f5d47",
+          "color": "#00c853",
           "placement": { "x": 2, "y": 6, "width_cells": 1, "height_cells": 3 },
           "items": [
             { "name": "Ksiazka kucharska" },
@@ -81,7 +81,7 @@
         {
           "name": "Komoda",
           "description": "Komoda z szufladami",
-          "color": "#9a6a4d",
+          "color": "#00bfa5",
           "placement": { "x": 10, "y": 6, "width_cells": 2, "height_cells": 1 },
           "items": [
             { "name": "Obrus" },
@@ -107,7 +107,7 @@
         {
           "name": "Lozko",
           "description": "Lozko dwuosobowe",
-          "color": "#a97f90",
+          "color": "#00b0ff",
           "placement": { "x": 2, "y": 2, "width_cells": 2, "height_cells": 3 },
           "items": [
             { "name": "Poduszka" },
@@ -125,7 +125,7 @@
         {
           "name": "Szafa",
           "description": "Szafa na ubrania",
-          "color": "#7b5a66",
+          "color": "#2962ff",
           "placement": { "x": 6, "y": 1, "width_cells": 2, "height_cells": 3 },
           "items": [
             { "name": "Koszula" },
@@ -143,7 +143,7 @@
         {
           "name": "Szafka nocna",
           "description": "Szafka nocna",
-          "color": "#6e4f5b",
+          "color": "#651fff",
           "placement": { "x": 1, "y": 6, "width_cells": 1, "height_cells": 1 },
           "items": [
             { "name": "Lampka" },
@@ -161,7 +161,7 @@
         {
           "name": "Komoda",
           "description": "Komoda z szufladami",
-          "color": "#84606c",
+          "color": "#c51162",
           "placement": { "x": 4, "y": 6, "width_cells": 2, "height_cells": 1 },
           "items": [
             { "name": "Bielizna" },
@@ -179,7 +179,7 @@
         {
           "name": "Biurko",
           "description": "Biurko do pracy",
-          "color": "#6b4d57",
+          "color": "#4e342e",
           "placement": { "x": 8, "y": 6, "width_cells": 2, "height_cells": 1 },
           "items": [
             { "name": "Laptop" },
@@ -205,7 +205,7 @@
         {
           "name": "Blat",
           "description": "Blat roboczy",
-          "color": "#9b7a55",
+          "color": "#ff1744",
           "placement": { "x": 1, "y": 1, "width_cells": 2, "height_cells": 1 },
           "items": [
             { "name": "Deska do krojenia" },
@@ -223,7 +223,7 @@
         {
           "name": "Szafka dolna",
           "description": "Szafka z garnkami",
-          "color": "#8d6c4c",
+          "color": "#ff6d00",
           "placement": { "x": 4, "y": 1, "width_cells": 2, "height_cells": 2 },
           "items": [
             { "name": "Garnek" },
@@ -241,7 +241,7 @@
         {
           "name": "Szafka wiszaca",
           "description": "Szafka na szklanki",
-          "color": "#a67f55",
+          "color": "#ffea00",
           "placement": { "x": 7, "y": 1, "width_cells": 2, "height_cells": 1 },
           "items": [
             { "name": "Szklanki" },
@@ -259,7 +259,7 @@
         {
           "name": "Lodowka",
           "description": "Lodowka z zamrazarka",
-          "color": "#c2a07a",
+          "color": "#00c853",
           "placement": { "x": 10, "y": 1, "width_cells": 2, "height_cells": 3 },
           "items": [
             { "name": "Mleko" },
@@ -277,7 +277,7 @@
         {
           "name": "Stol",
           "description": "Stol kuchenny",
-          "color": "#8a6b4d",
+          "color": "#00bfa5",
           "placement": { "x": 3, "y": 6, "width_cells": 2, "height_cells": 2 },
           "items": [
             { "name": "Obrus" },
@@ -303,7 +303,7 @@
         {
           "name": "Szafka pod umywalke",
           "description": "Szafka z kosmetykami",
-          "color": "#5a7c8e",
+          "color": "#00b0ff",
           "placement": { "x": 1, "y": 1, "width_cells": 2, "height_cells": 1 },
           "items": [
             { "name": "Mydlo" },
@@ -321,7 +321,7 @@
         {
           "name": "Polka",
           "description": "Polka na reczniki",
-          "color": "#517281",
+          "color": "#2962ff",
           "placement": { "x": 4, "y": 1, "width_cells": 1, "height_cells": 2 },
           "items": [
             { "name": "Recznik duzy" },
@@ -339,7 +339,7 @@
         {
           "name": "Szafka wysoka",
           "description": "Szafka na zapasy",
-          "color": "#648090",
+          "color": "#651fff",
           "placement": { "x": 6, "y": 1, "width_cells": 2, "height_cells": 3 },
           "items": [
             { "name": "Papier toaletowy" },
@@ -357,7 +357,7 @@
         {
           "name": "Kosz na pranie",
           "description": "Kosz na pranie",
-          "color": "#7a97a6",
+          "color": "#c51162",
           "placement": { "x": 1, "y": 5, "width_cells": 1, "height_cells": 2 },
           "items": [
             { "name": "Kosz na bielizne" },
@@ -375,7 +375,7 @@
         {
           "name": "Polka prysznicowa",
           "description": "Polka w prysznicu",
-          "color": "#4f6c7b",
+          "color": "#4e342e",
           "placement": { "x": 4, "y": 7, "width_cells": 1, "height_cells": 1 },
           "items": [
             { "name": "Zel pod prysznic" },
