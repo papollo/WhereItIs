@@ -1,0 +1,44 @@
+.user-edit-page {
+  display: grid;
+  gap: 20px;
+  max-width: 760px;
+}
+
+.user-edit-page__header {
+  display: grid;
+  gap: 6px;
+}
+
+.user-edit-page__header h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.user-edit-page__header p {
+  margin: 0;
+  color: rgba(31, 31, 28, 0.7);
+}
+
+.user-edit-page__empty {
+  padding: 20px;
+  border-radius: 16px;
+  background: rgba(31, 31, 28, 0.05);
+  color: rgba(31, 31, 28, 0.75);
+}
+
+.user-edit-page__empty p {
+  margin: 0;
+}
+
+.user-edit-page__actions {
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+
+.user-edit-page__loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(31, 31, 28, 0.7);
+}

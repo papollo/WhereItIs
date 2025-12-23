@@ -1,0 +1,28 @@
+<section class="user-edit-page">
+  <header class="user-edit-page__header">
+    <div>
+      <h1>Edycja uzytkownika</h1>
+      <p>Ten widok jest pusty w MVP.</p>
+    </div>
+  </header>
+
+  <section class="user-edit-page__empty">
+    <p>Wkrotce pojawi sie formularz edycji profilu.</p>
+  </section>
+
+  <section class="user-edit-page__actions">
+    <button
+      mat-flat-button
+      color="primary"
+      type="button"
+      (click)="addTestData()"
+      [disabled]="isSeeding"
+    >
+      Dodaj dane testowe
+    </button>
+    <div class="user-edit-page__loading" *ngIf="isSeeding">
+      <mat-progress-spinner diameter="20"></mat-progress-spinner>
+      <span>Tworzenie danych testowych...</span>
+    </div>
+  </section>
+</section>

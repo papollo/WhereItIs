@@ -1,0 +1,396 @@
+{
+  "rooms": [
+    {
+      "name": "Duzy pokoj",
+      "color": "#b07b5a",
+      "width": 14,
+      "height": 12,
+      "furniture": [
+        {
+          "name": "Sofa",
+          "description": "Sofa trzyosobowa",
+          "color": "#c28a6b",
+          "placement": { "x": 1, "y": 1, "width_cells": 2, "height_cells": 2 },
+          "items": [
+            { "name": "Poduszka dekoracyjna" },
+            { "name": "Koc" },
+            { "name": "Pilot do TV" },
+            { "name": "Magazyn" },
+            { "name": "Ksiazka" },
+            { "name": "Lampa stojaca" },
+            { "name": "Latarka" },
+            { "name": "Notes" },
+            { "name": "Dlugopis" },
+            { "name": "Sluchawki" }
+          ]
+        },
+        {
+          "name": "Stolik kawowy",
+          "description": "Stolik kawowy z polka",
+          "color": "#8c6a4f",
+          "placement": { "x": 4, "y": 2, "width_cells": 1, "height_cells": 1 },
+          "items": [
+            { "name": "Miska" },
+            { "name": "Swieczka" },
+            { "name": "Podkladki" },
+            { "name": "Pilot do soundbara" },
+            { "name": "Etui na okulary" },
+            { "name": "Kostki do gry" },
+            { "name": "Album ze zdjeciami" },
+            { "name": "Zapalniczka" },
+            { "name": "Serwetki" },
+            { "name": "Brelok" }
+          ]
+        },
+        {
+          "name": "Szafka RTV",
+          "description": "Szafka pod telewizor",
+          "color": "#6f5845",
+          "placement": { "x": 8, "y": 1, "width_cells": 2, "height_cells": 1 },
+          "items": [
+            { "name": "Dekoder" },
+            { "name": "Konsola" },
+            { "name": "Pad" },
+            { "name": "Kable HDMI" },
+            { "name": "Pilot zapasowy" },
+            { "name": "Instrukcja" },
+            { "name": "Gry" },
+            { "name": "Plyty" },
+            { "name": "Adapter" },
+            { "name": "Baterie" }
+          ]
+        },
+        {
+          "name": "Regal",
+          "description": "Regal na ksiazki",
+          "color": "#7f5d47",
+          "placement": { "x": 2, "y": 6, "width_cells": 1, "height_cells": 3 },
+          "items": [
+            { "name": "Ksiazka kucharska" },
+            { "name": "Powiesc" },
+            { "name": "Poradnik" },
+            { "name": "Segregator" },
+            { "name": "Zeszyt" },
+            { "name": "Album" },
+            { "name": "Plyty CD" },
+            { "name": "Gra planszowa" },
+            { "name": "Pudelko" },
+            { "name": "Ramka" }
+          ]
+        },
+        {
+          "name": "Komoda",
+          "description": "Komoda z szufladami",
+          "color": "#9a6a4d",
+          "placement": { "x": 10, "y": 6, "width_cells": 2, "height_cells": 1 },
+          "items": [
+            { "name": "Obrus" },
+            { "name": "Kable" },
+            { "name": "Szkicownik" },
+            { "name": "Zasilacz" },
+            { "name": "Karty" },
+            { "name": "Instrukcje" },
+            { "name": "Ladowarka" },
+            { "name": "Kosmetyczka" },
+            { "name": "Spinacze" },
+            { "name": "Baterie zapasowe" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Sypialnia",
+      "color": "#8f6d7d",
+      "width": 12,
+      "height": 10,
+      "furniture": [
+        {
+          "name": "Lozko",
+          "description": "Lozko dwuosobowe",
+          "color": "#a97f90",
+          "placement": { "x": 2, "y": 2, "width_cells": 2, "height_cells": 3 },
+          "items": [
+            { "name": "Poduszka" },
+            { "name": "Koldra" },
+            { "name": "Przescieradlo" },
+            { "name": "Poszewka" },
+            { "name": "Koc" },
+            { "name": "Poduszka zapasowa" },
+            { "name": "Ksiazka na noc" },
+            { "name": "Budzik" },
+            { "name": "Maska do spania" },
+            { "name": "Woda" }
+          ]
+        },
+        {
+          "name": "Szafa",
+          "description": "Szafa na ubrania",
+          "color": "#7b5a66",
+          "placement": { "x": 6, "y": 1, "width_cells": 2, "height_cells": 3 },
+          "items": [
+            { "name": "Koszula" },
+            { "name": "Spodnie" },
+            { "name": "Sweter" },
+            { "name": "Kurtka" },
+            { "name": "Sukienka" },
+            { "name": "Skpetki" },
+            { "name": "Pasek" },
+            { "name": "Torba" },
+            { "name": "Czapka" },
+            { "name": "Buty" }
+          ]
+        },
+        {
+          "name": "Szafka nocna",
+          "description": "Szafka nocna",
+          "color": "#6e4f5b",
+          "placement": { "x": 1, "y": 6, "width_cells": 1, "height_cells": 1 },
+          "items": [
+            { "name": "Lampka" },
+            { "name": "Okulary" },
+            { "name": "Telefon" },
+            { "name": "Ladowarka" },
+            { "name": "Notatnik" },
+            { "name": "Dlugopis" },
+            { "name": "Krem" },
+            { "name": "Balsam" },
+            { "name": "Chusteczki" },
+            { "name": "Balsam do ust" }
+          ]
+        },
+        {
+          "name": "Komoda",
+          "description": "Komoda z szufladami",
+          "color": "#84606c",
+          "placement": { "x": 4, "y": 6, "width_cells": 2, "height_cells": 1 },
+          "items": [
+            { "name": "Bielizna" },
+            { "name": "Reczniki" },
+            { "name": "Pizama" },
+            { "name": "Posciel" },
+            { "name": "Skapety sportowe" },
+            { "name": "Apaszka" },
+            { "name": "Zegarek" },
+            { "name": "Lustereczko" },
+            { "name": "Etui" },
+            { "name": "Saszetka" }
+          ]
+        },
+        {
+          "name": "Biurko",
+          "description": "Biurko do pracy",
+          "color": "#6b4d57",
+          "placement": { "x": 8, "y": 6, "width_cells": 2, "height_cells": 1 },
+          "items": [
+            { "name": "Laptop" },
+            { "name": "Mysz" },
+            { "name": "Klawiatura" },
+            { "name": "Notes" },
+            { "name": "Dlugopis" },
+            { "name": "Lampka" },
+            { "name": "Kabel USB" },
+            { "name": "Zeszyt" },
+            { "name": "Teczka" },
+            { "name": "Sluchawki" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kuchnia",
+      "color": "#b28b5f",
+      "width": 13,
+      "height": 11,
+      "furniture": [
+        {
+          "name": "Blat",
+          "description": "Blat roboczy",
+          "color": "#9b7a55",
+          "placement": { "x": 1, "y": 1, "width_cells": 2, "height_cells": 1 },
+          "items": [
+            { "name": "Deska do krojenia" },
+            { "name": "Noz" },
+            { "name": "Miska" },
+            { "name": "Cedzak" },
+            { "name": "Waga" },
+            { "name": "Tarka" },
+            { "name": "Sitko" },
+            { "name": "Miska mala" },
+            { "name": "Scierka" },
+            { "name": "Gabka" }
+          ]
+        },
+        {
+          "name": "Szafka dolna",
+          "description": "Szafka z garnkami",
+          "color": "#8d6c4c",
+          "placement": { "x": 4, "y": 1, "width_cells": 2, "height_cells": 2 },
+          "items": [
+            { "name": "Garnek" },
+            { "name": "Patelnia" },
+            { "name": "Pokrywka" },
+            { "name": "Rondel" },
+            { "name": "Miski" },
+            { "name": "Forma" },
+            { "name": "Talerze" },
+            { "name": "Miska duza" },
+            { "name": "Pojemnik" },
+            { "name": "Dzbanek" }
+          ]
+        },
+        {
+          "name": "Szafka wiszaca",
+          "description": "Szafka na szklanki",
+          "color": "#a67f55",
+          "placement": { "x": 7, "y": 1, "width_cells": 2, "height_cells": 1 },
+          "items": [
+            { "name": "Szklanki" },
+            { "name": "Kubki" },
+            { "name": "Filizanki" },
+            { "name": "Spodki" },
+            { "name": "Dzbanuszek" },
+            { "name": "Cukiernica" },
+            { "name": "Mlecznik" },
+            { "name": "Termos" },
+            { "name": "Kieliszki" },
+            { "name": "Karafka" }
+          ]
+        },
+        {
+          "name": "Lodowka",
+          "description": "Lodowka z zamrazarka",
+          "color": "#c2a07a",
+          "placement": { "x": 10, "y": 1, "width_cells": 2, "height_cells": 3 },
+          "items": [
+            { "name": "Mleko" },
+            { "name": "Jajka" },
+            { "name": "Maslo" },
+            { "name": "Ser" },
+            { "name": "Szynka" },
+            { "name": "Jogurt" },
+            { "name": "Warzywa" },
+            { "name": "Owoce" },
+            { "name": "Woda" },
+            { "name": "Sok" }
+          ]
+        },
+        {
+          "name": "Stol",
+          "description": "Stol kuchenny",
+          "color": "#8a6b4d",
+          "placement": { "x": 3, "y": 6, "width_cells": 2, "height_cells": 2 },
+          "items": [
+            { "name": "Obrus" },
+            { "name": "Serwetki" },
+            { "name": "Solniczka" },
+            { "name": "Pieprzniczka" },
+            { "name": "Miseczka" },
+            { "name": "Dzbanek" },
+            { "name": "Podkladki" },
+            { "name": "Kwiat" },
+            { "name": "Swieczka" },
+            { "name": "Cukier" }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Lazienka",
+      "color": "#6d8fa1",
+      "width": 10,
+      "height": 12,
+      "furniture": [
+        {
+          "name": "Szafka pod umywalke",
+          "description": "Szafka z kosmetykami",
+          "color": "#5a7c8e",
+          "placement": { "x": 1, "y": 1, "width_cells": 2, "height_cells": 1 },
+          "items": [
+            { "name": "Mydlo" },
+            { "name": "Szampon" },
+            { "name": "Odzywka" },
+            { "name": "Pasta do zebow" },
+            { "name": "Szczoteczka" },
+            { "name": "Nici" },
+            { "name": "Dezodorant" },
+            { "name": "Krem" },
+            { "name": "Gabka" },
+            { "name": "Waciki" }
+          ]
+        },
+        {
+          "name": "Polka",
+          "description": "Polka na reczniki",
+          "color": "#517281",
+          "placement": { "x": 4, "y": 1, "width_cells": 1, "height_cells": 2 },
+          "items": [
+            { "name": "Recznik duzy" },
+            { "name": "Recznik maly" },
+            { "name": "Dywanik" },
+            { "name": "Koszyk" },
+            { "name": "Papier toaletowy" },
+            { "name": "Plyn do szyb" },
+            { "name": "Szczotka" },
+            { "name": "Mop" },
+            { "name": "Proszek" },
+            { "name": "Gumowe rekawice" }
+          ]
+        },
+        {
+          "name": "Szafka wysoka",
+          "description": "Szafka na zapasy",
+          "color": "#648090",
+          "placement": { "x": 6, "y": 1, "width_cells": 2, "height_cells": 3 },
+          "items": [
+            { "name": "Papier toaletowy" },
+            { "name": "Zapasy mydla" },
+            { "name": "Plastry" },
+            { "name": "Woda utleniona" },
+            { "name": "Maszynka" },
+            { "name": "Pianka" },
+            { "name": "Reczniki papierowe" },
+            { "name": "Srodki czystosci" },
+            { "name": "Szczotka" },
+            { "name": "Kosz" }
+          ]
+        },
+        {
+          "name": "Kosz na pranie",
+          "description": "Kosz na pranie",
+          "color": "#7a97a6",
+          "placement": { "x": 1, "y": 5, "width_cells": 1, "height_cells": 2 },
+          "items": [
+            { "name": "Kosz na bielizne" },
+            { "name": "Proszek" },
+            { "name": "Plyn" },
+            { "name": "Zawieszka" },
+            { "name": "Klamerki" },
+            { "name": "Worki" },
+            { "name": "Odplamiacz" },
+            { "name": "Recznik" },
+            { "name": "Szczotka" },
+            { "name": "Worki zapasowe" }
+          ]
+        },
+        {
+          "name": "Polka prysznicowa",
+          "description": "Polka w prysznicu",
+          "color": "#4f6c7b",
+          "placement": { "x": 4, "y": 7, "width_cells": 1, "height_cells": 1 },
+          "items": [
+            { "name": "Zel pod prysznic" },
+            { "name": "Szampon" },
+            { "name": "Odzywka" },
+            { "name": "Mydlo" },
+            { "name": "Gabeczka" },
+            { "name": "Gabka" },
+            { "name": "Maszynka" },
+            { "name": "Peeling" },
+            { "name": "Myjka" },
+            { "name": "Olejek" }
+          ]
+        }
+      ]
+    }
+  ]
+}
