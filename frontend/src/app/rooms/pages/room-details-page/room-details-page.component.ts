@@ -14,6 +14,7 @@ import {
   type FurnitureFormResult,
 } from '../../../furniture/components/furniture-form-dialog.component';
 import { FurnitureListComponent } from '../../../furniture/components/furniture-list.component';
+import { FurnitureItemsDialogComponent } from '../../../items/components/furniture-items-dialog.component';
 import type { FurnitureListItemVM } from '../../../furniture/furniture.view-models';
 import { RoomGridPreviewComponent } from '../../components/room-grid-preview.component';
 import { RoomDetailsFacade, type CreateFurniturePayload, type FurniturePlacementVM } from '../../room-details.facade';
@@ -69,7 +70,7 @@ export class RoomDetailsPageComponent implements OnInit {
     try {
       await this.facade.load(roomId);
       if (initialFurnitureId) {
-        await this.editFurniture(roomId, initialFurnitureId);
+        this.openFurniture(roomId, initialFurnitureId);
       }
     } catch (err: unknown) {
       this.showError(err);
@@ -161,7 +162,22 @@ export class RoomDetailsPageComponent implements OnInit {
       queryParams: { furnitureId },
       queryParamsHandling: 'merge',
     });
-    void this.editFurniture(roomId, furnitureId);
+
+    const current = this.furnitureSnapshot.find((item) => item.id === furnitureId);
+    if (!current) {
+      return;
+    }
+
+    this.dialog.open(FurnitureItemsDialogComponent, {
+      data: {
+        furnitureId,
+        furnitureName: current.name,
+        roomId,
+      },
+      width: '720px',
+      height: '50vh',
+      maxWidth: '95vw',
+    });
   }
 
   describeError(error: ApiError): string {

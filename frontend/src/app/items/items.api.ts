@@ -4,6 +4,7 @@ import { SupabaseService } from '../../db/supabase.service';
 import { ApiError } from '../shared/api-error';
 import {
   mapCreateItemsPostgrestError,
+  mapDeleteItemPostgrestError,
   mapListItemsPostgrestError,
 } from './items.errors';
 import type {
@@ -18,6 +19,7 @@ import { ITEM_LIST_SELECT } from './items.types';
 import {
   validateCreateItemsRequest,
   validateFurnitureId,
+  validateItemId,
   validateListFurnitureItemsQuery,
 } from './items.validation';
 
@@ -109,5 +111,28 @@ export class ItemsApi {
     }
 
     return { created, failed };
+  }
+
+  async deleteItem(itemId: string): Promise<void> {
+    const idErrors = validateItemId(itemId);
+    if (idErrors) {
+      throw ApiError.validation(idErrors);
+    }
+
+    const { data, error, status } = await this.supabase
+      .getClient()
+      .from('items')
+      .delete()
+      .eq('id', itemId)
+      .select('id')
+      .maybeSingle();
+
+    if (error) {
+      throw mapDeleteItemPostgrestError(error, status);
+    }
+
+    if (!data) {
+      throw ApiError.notFound('Item not found');
+    }
   }
 }

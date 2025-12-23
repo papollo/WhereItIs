@@ -1,0 +1,146 @@
+# Plan implementacji widoku Modal mebla i przedmiotow
+
+## 1. Przeglad
+
+Widok to modal uruchamiany z poziomu /rooms/:roomId, sluzacy do zarzadzania przedmiotami przypisanymi do wybranego mebla.
+Umozliwia przeglad listy przedmiotow, szybkie dodawanie wielu pozycji w jednym zapisie oraz usuwanie istniejacych wpisow.
+Priorytetem jest walidacja per pole, obsluga bledow czesciowych oraz widoczne powiadomienie o bledach serwera.
+Modal pojawia się po kliknięciu w wiersz z meblem na stronie szczegółów pokoju.
+
+## 2. Routing widoku
+
+Modal nad /rooms/:roomId (brak osobnej trasy). Otwierany z widoku szczegolow pokoju po kliknieciu mebla.
+
+## 3. Struktura komponentow
+
+- RoomDetailsPageComponent
+  - FurnitureItemsDialogComponent (MatDialog)
+    - ItemsListComponent
+      - ItemRowComponent
+    - ItemsBulkAddFormComponent
+    - ItemsDialogActionsComponent
+
+## 4. Szczegoly komponentow
+
+### FurnitureItemsDialogComponent
+
+- Opis komponentu: Kontener modalu; laduje liste przedmiotow mebla, utrzymuje stan formularza dodawania i obsluguje zapisy/usuwanie.
+- Glowne elementy: naglowek z nazwa mebla, lista przedmiotow, sekcja dodawania (wiele pol), przycisk "+" i "Zapisz".
+- Obslugiwane interakcje: otwarcie/zamkniecie modalu, dodanie pola, usuniecie pola, zapis nowych przedmiotow, usuniecie istniejacego przedmiotu.
+- Obslugiwana walidacja:
+  - `furnitureId` niepuste
+  - kazde pole nazwy: trim, dlugosc 1..200
+  - przy zapisie wymagane min. 1 pole
+- Typy: `ItemListItemDto`, `ItemListResponseDto`, `ItemCreateRequest`, `ItemCreateResponseDto`.
+- Propsy: `furnitureId: string`, `furnitureName: string`, `roomId: string` (opcjonalnie do telemetry lub breadcrumbs), `initialItems?: ItemListItemDto[]`.
+
+### ItemsListComponent
+
+- Opis komponentu: Wyswietla liste istniejacych przedmiotow mebla.
+- Glowne elementy: lista (mat-list lub zwykla lista), przycisk usuwania przy kazdym wierszu.
+- Obslugiwane interakcje: klikniecie „Usun”.
+- Obslugiwana walidacja: brak (tylko akcje).
+- Typy: `ItemListItemDto`.
+- Propsy: `items: ItemListItemDto[]`, `isLoading: boolean`, `deleteDisabled?: boolean`.
+
+### ItemRowComponent
+
+- Opis komponentu: Pojedynczy wiersz przedmiotu z nazwa i akcja usuniecia.
+- Glowne elementy: nazwa, przycisk usuniecia (mat-icon-button).
+- Obslugiwane interakcje: `delete`.
+- Obslugiwana walidacja: brak.
+- Typy: `ItemListItemDto`.
+- Propsy: `item: ItemListItemDto`, `busy?: boolean`.
+
+### ItemsBulkAddFormComponent
+
+- Opis komponentu: Formularz do dodawania wielu nazw przedmiotow naraz.
+- Glowne elementy: lista inputow, przycisk „+” dodajacy pole, przycisk „Zapisz”.
+- Obslugiwane interakcje: dodaj/usun pole, zmiana wartosci, zapis.
+- Obslugiwana walidacja:
+  - kazde pole: trim, dlugosc 1..200
+  - min. 1 pole do zapisu
+- Typy: `ItemCreateRequest` (lokalnie), `ItemCreateResponseDto`.
+- Propsy: `drafts: ItemDraftVM[]`, `saving: boolean`.
+
+### ItemsDialogActionsComponent
+
+- Opis komponentu: Dolny pasek akcji modalu (Anuluj, Zapisz).
+- Glowne elementy: przyciski akcji.
+- Obslugiwane interakcje: zamkniecie, zapis.
+- Obslugiwana walidacja: przycisk „Zapisz” aktywny tylko gdy formularz poprawny.
+- Typy: brak dodatkowych.
+- Propsy: `canSave: boolean`, `saving: boolean`.
+
+## 5. Typy
+
+- `ItemListItemDto`: `{ id: string; name: string }`
+- `ItemListResponseDto`: `{ data: ItemListItemDto[] }`
+- `ItemCreateInput`: `{ name: string }`
+- `ItemCreateRequest`: `{ items: ItemCreateInput[] }`
+- `ItemCreateFailureDto`: `{ name: string; error?: string }`
+- `ItemCreateResponseDto`: `{ created: ItemListItemDto[]; failed: ItemCreateFailureDto[] }`
+- `ItemDraftVM` (nowy ViewModel):
+  - `id: string` (lokalny identyfikator pola)
+  - `name: string`
+  - `error?: string` (blad walidacji pola)
+  - `serverError?: string` (blad zwrocony dla konkretnej pozycji)
+
+## 6. Zarzadzanie stanem
+
+- Stan modalu w `FurnitureItemsDialogComponent`:
+  - `items: ItemListItemDto[]`
+  - `drafts: ItemDraftVM[]`
+  - `isLoading: boolean`
+  - `isSaving: boolean`
+  - `deleteBusyIds: Set<string>`
+  - `error?: string` (globalny blad serwera, np. do toastu)
+- Logika formularza: lista `drafts` inicjalizowana jednym pustym polem; przyciskiem „+” dodawane kolejne.
+- Brak custom hookow (Angular); ewentualnie lokalny helper do normalizacji inputow.
+
+## 7. Integracja API
+
+- GET `/furniture/{furnitureId}/items`
+  - Uzycie: `ItemsApi.listFurnitureItems({ furnitureId, limit?, offset?, sort?, q? })`.
+  - Odpowiedz mapowana do `items`.
+- POST `/furniture/{furnitureId}/items`
+  - Uzycie: `ItemsApi.createFurnitureItems(furnitureId, { items })`.
+  - Odpowiedz: dopisanie `created` do listy, `failed` mapowane na `drafts[*].serverError`.
+- DELETE `/items/{itemId}`
+  - Uzycie: `ItemsApi.deleteItem(itemId)`; po sukcesie usuniecie z listy.
+- PATCH `/items/{itemId}` nie jest wymagany przez user stories; mozna odlozyc.
+
+## 8. Interakcje uzytkownika
+
+- Otwarcie modalu: ladowanie listy przedmiotow dla mebla.
+- Dodanie pola: klik „+” dodaje nowy input.
+- Zapis: wyslanie wszystkich niepustych pol; po sukcesie czyszczenie tylko zapisanych pol, pozostawienie niezapisanych z bledami.
+- Usuniecie: klik „Usun” usuwa element po potwierdzeniu lub od razu (zgodnie z UX); lista odswieza sie lokalnie.
+- Blad serwera: czerwony toast w prawym gornym rogu.
+
+## 9. Warunki i walidacja
+
+- `furnitureId` musi byc niepuste przed wywolaniem API.
+- `items[].name` po trim nie moze byc puste i max 200 znakow.
+- `items` do zapisu: min. jedna pozycja.
+- Dla filtrowania `q`: jesli podane, po trim niepuste i max 200 znakow.
+- Przyciski: „Zapisz” aktywny tylko gdy wszystkie aktywne pola sa poprawne i jest co najmniej 1 pole.
+
+## 10. Obsluga bledow
+
+- Walidacja klienta: inline pod polami.
+- Czesciowe bledy zapisu: `failed[]` mapowane na odpowiednie inputy.
+- Blad 400/422: pokaz inline + komunikat ogolny.
+- Blad 401/500: czerwony toast i blokada akcji do ponowienia.
+- Usuwanie: jesli 404, usun z listy lokalnie i pokaz delikatny komunikat.
+
+## 11. Kroki implementacji
+
+1. Dodac komponent `FurnitureItemsDialogComponent` w module rooms/furniture i podstawowy layout modalu.
+2. Dodac `ItemsListComponent` i `ItemRowComponent` do renderowania listy oraz akcji usuwania.
+3. Dodac `ItemsBulkAddFormComponent` z obsluga dynamicznych pol i walidacja per pole.
+4. Zintegrowac `ItemsApi.listFurnitureItems` przy otwarciu modalu.
+5. Zintegrowac `ItemsApi.createFurnitureItems` z obsluga `created/failed`.
+6. Dodac obsluge usuwania przez `ItemsApi.deleteItem`.
+7. Dodac toast dla bledow serwera oraz stany ladowania/zapisu.
+8. Spiac modal z akcja klikniecia mebla w widoku szczegolow pokoju.
