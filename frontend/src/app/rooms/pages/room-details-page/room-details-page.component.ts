@@ -68,13 +68,9 @@ export class RoomDetailsPageComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     const roomId = this.route.snapshot.paramMap.get('roomId') ?? '';
-    const initialFurnitureId = this.route.snapshot.queryParamMap.get('furnitureId');
 
     try {
       await this.facade.load(roomId);
-      if (initialFurnitureId) {
-        this.openFurniture(roomId, initialFurnitureId);
-      }
     } catch (err: unknown) {
       this.showError(err);
     }

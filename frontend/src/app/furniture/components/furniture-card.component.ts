@@ -11,6 +11,7 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
   template: `
     <mat-card
       class="furniture-card"
+      [class.furniture-card--highlighted]="highlighted"
       (mouseenter)="hover.emit(item.id)"
       (mouseleave)="hover.emit(null)"
     >
@@ -58,6 +59,11 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
         display: grid;
         padding: 12px 16px;
         border-left: 4px solid transparent;
+      }
+
+      .furniture-card--highlighted {
+        border-left-color: #2e7d32;
+        background: rgba(46, 125, 50, 0.12);
       }
 
 
