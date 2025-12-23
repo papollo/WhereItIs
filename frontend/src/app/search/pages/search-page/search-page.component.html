@@ -1,0 +1,31 @@
+<section class="search-page">
+  <header class="search-page__header">
+    <div>
+      <h1>Wyszukiwanie przedmiotow</h1>
+      <p>Znajdz przedmiot i przejdz do mebla, w ktorym sie znajduje.</p>
+    </div>
+  </header>
+
+  <app-search-form
+    [query]="state.query"
+    [disabled]="state.isLoading"
+    [error]="formError"
+    (update)="updateQuery($event)"
+    (submitQuery)="submitQuery($event)"
+  ></app-search-form>
+
+  <section class="search-page__loading" *ngIf="state.isLoading">
+    <mat-progress-spinner diameter="28" mode="indeterminate"></mat-progress-spinner>
+    <span>Wyszukiwanie...</span>
+  </section>
+
+  <app-search-results-list
+    *ngIf="!state.isLoading && state.results.length > 0"
+    [items]="state.results"
+    (open)="openResult($event)"
+  ></app-search-results-list>
+
+  <app-search-empty-state
+    *ngIf="!state.isLoading && state.hasSearched && state.results.length === 0"
+  ></app-search-empty-state>
+</section>
