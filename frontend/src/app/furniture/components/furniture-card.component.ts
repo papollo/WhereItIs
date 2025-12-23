@@ -9,7 +9,11 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
   standalone: true,
   imports: [MatCardModule, MatButtonModule, DatePipe, NgIf],
   template: `
-    <mat-card class="furniture-card">
+    <mat-card
+      class="furniture-card"
+      (mouseenter)="hover.emit(item.id)"
+      (mouseleave)="hover.emit(null)"
+    >
       <div class="furniture-card__row">
         <div
           class="furniture-card__color"
@@ -115,6 +119,7 @@ export class FurnitureCardComponent {
   @Output() open = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
+  @Output() hover = new EventEmitter<string | null>();
 
   handleEdit(event: MouseEvent): void {
     event.stopPropagation();

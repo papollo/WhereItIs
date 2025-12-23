@@ -16,6 +16,7 @@ import { FurnitureCardComponent } from './furniture-card.component';
         (open)="open.emit($event)"
         (edit)="edit.emit($event)"
         (delete)="delete.emit($event)"
+        (hover)="hover.emit($event)"
       />
     </section>
   `,
@@ -34,6 +35,7 @@ export class FurnitureListComponent {
   @Output() open = new EventEmitter<string>();
   @Output() edit = new EventEmitter<string>();
   @Output() delete = new EventEmitter<string>();
+  @Output() hover = new EventEmitter<string | null>();
 
   trackByFurnitureId(index: number, item: FurnitureListItemVM): string {
     return item.id;

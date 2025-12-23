@@ -1,5 +1,5 @@
-import { NgFor } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import type { RoomCellDto } from '../rooms.types';
 
 export type RoomPlacementPreview = {
@@ -15,7 +15,7 @@ export type RoomPlacementPreview = {
 @Component({
   selector: 'app-room-grid-preview',
   standalone: true,
-  imports: [NgFor],
+  imports: [NgFor, NgIf],
   template: `
     <div
       class="room-grid__wrap"
@@ -40,6 +40,7 @@ export type RoomPlacementPreview = {
         [style.gridTemplateColumns]="gridTemplateColumns"
         [style.gridTemplateRows]="gridTemplateRows"
         aria-hidden="true"
+        (mouseleave)="setInternalHover(null)"
       >
         <div
           class="room-grid__placement"
@@ -47,8 +48,17 @@ export type RoomPlacementPreview = {
           [style.gridColumn]="placement.gridColumn"
           [style.gridRow]="placement.gridRow"
           [style.--placement-color]="placement.color"
+          [class.room-grid__placement--active]="
+            placement.furnitureId === highlightedFurnitureId ||
+            placement.furnitureId === hoveredFurnitureId ||
+            placement.furnitureId === internalHoveredFurnitureId
+          "
+          (mouseenter)="setInternalHover(placement.furnitureId)"
+          (mouseleave)="setInternalHover(null)"
           [attr.title]="placement.name ?? ''"
-        ></div>
+        >
+          <span class="room-grid__label" *ngIf="placement.name">{{ placement.name }}</span>
+        </div>
       </div>
     </div>
   `,
@@ -77,7 +87,7 @@ export type RoomPlacementPreview = {
         display: grid;
         gap: 2px;
         padding: 8px;
-        pointer-events: none;
+        pointer-events: auto;
       }
 
       .room-grid__cell {
@@ -92,11 +102,40 @@ export type RoomPlacementPreview = {
       }
 
       .room-grid__placement {
+        position: relative;
         background: var(--placement-color);
         border-radius: 4px;
         opacity: 0.6;
         border: 2px solid rgba(0, 0, 0, 0.35);
         box-sizing: border-box;
+        pointer-events: auto;
+      }
+
+      .room-grid__placement--active {
+        opacity: 0.9;
+        border-color: rgba(31, 31, 28, 0.8);
+        box-shadow: 0 0 0 2px rgba(31, 31, 28, 0.2);
+      }
+
+      .room-grid__label {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: rgba(31, 31, 28, 0.9);
+        color: #f8f6ef;
+        font-size: 11px;
+        letter-spacing: 0.2px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+        white-space: nowrap;
+      }
+
+      .room-grid__placement--active .room-grid__label {
+        opacity: 1;
       }
     `,
   ],
@@ -108,6 +147,9 @@ export class RoomGridPreviewComponent implements OnChanges {
   @Input() cellSizePx = 16;
   @Input() fillColor = '#212121';
   @Input() placements: RoomPlacementPreview[] = [];
+  @Input() highlightedFurnitureId?: string;
+  @Input() hoveredFurnitureId?: string;
+  @Input() resetHoverToken = 0;
 
   gridCells: Array<{ filled: boolean }> = [];
   gridTemplateColumns = '';
@@ -119,8 +161,15 @@ export class RoomGridPreviewComponent implements OnChanges {
     color: string;
     name?: string;
   }> = [];
+  internalHoveredFurnitureId?: string;
+  private lastResetToken = 0;
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['resetHoverToken'] && this.resetHoverToken !== this.lastResetToken) {
+      this.internalHoveredFurnitureId = undefined;
+      this.lastResetToken = this.resetHoverToken;
+    }
+
     const grid = this.getGridSpec();
     const filled = new Set(this.cells.map((cell) => `${cell.x}:${cell.y}`));
 
@@ -153,6 +202,10 @@ export class RoomGridPreviewComponent implements OnChanges {
 
   trackByPlacementId(_: number, placement: { furnitureId: string }): string {
     return placement.furnitureId;
+  }
+
+  setInternalHover(furnitureId: string | null): void {
+    this.internalHoveredFurnitureId = furnitureId ?? undefined;
   }
 
   private getGridSpec(): { safeWidth: number; safeHeight: number; offsetX: number; offsetY: number } {

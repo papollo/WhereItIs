@@ -47,6 +47,9 @@ export class RoomDetailsPageComponent implements OnInit {
   readonly state$ = this.facade.state$;
 
   highlightedFurnitureId?: string;
+  hoveredFurnitureId?: string;
+  isItemsDialogOpen = false;
+  resetHoverToken = 0;
   private furnitureSnapshot: FurnitureListItemVM[] = [];
   private placementSnapshot: FurniturePlacementVM[] = [];
 
@@ -157,6 +160,9 @@ export class RoomDetailsPageComponent implements OnInit {
   }
 
   openFurniture(roomId: string, furnitureId: string): void {
+    this.hoveredFurnitureId = undefined;
+    this.resetHoverToken += 1;
+    this.isItemsDialogOpen = true;
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { furnitureId },
@@ -168,7 +174,7 @@ export class RoomDetailsPageComponent implements OnInit {
       return;
     }
 
-    this.dialog.open(FurnitureItemsDialogComponent, {
+    const dialogRef = this.dialog.open(FurnitureItemsDialogComponent, {
       data: {
         furnitureId,
         furnitureName: current.name,
@@ -178,6 +184,22 @@ export class RoomDetailsPageComponent implements OnInit {
       height: '50vh',
       maxWidth: '95vw',
     });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.highlightedFurnitureId = undefined;
+      this.hoveredFurnitureId = undefined;
+      this.isItemsDialogOpen = false;
+      this.resetHoverToken += 1;
+      void this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { furnitureId: null },
+        queryParamsHandling: 'merge',
+      });
+    });
+  }
+
+  setHoveredFurniture(furnitureId: string | null): void {
+    this.hoveredFurnitureId = furnitureId ?? undefined;
   }
 
   describeError(error: ApiError): string {
