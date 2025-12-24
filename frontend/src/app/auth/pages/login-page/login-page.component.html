@@ -1,0 +1,38 @@
+<app-auth-layout>
+  <app-auth-form-card title="Zaloguj sie" subtitle="Wroc do swoich pokojow i przedmiotow.">
+    <form [formGroup]="form" (ngSubmit)="submit()" class="auth-form">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" autocomplete="email" />
+        <mat-error *ngIf="form.controls.email.hasError('required')">
+          Email jest wymagany.
+        </mat-error>
+        <mat-error *ngIf="form.controls.email.hasError('email')">
+          Podaj poprawny adres email.
+        </mat-error>
+      </mat-form-field>
+
+      <app-password-field
+        [control]="form.controls.password"
+        label="Haslo"
+        autocomplete="current-password"
+      >
+        <mat-error *ngIf="form.controls.password.hasError('required')">
+          Haslo jest wymagane.
+        </mat-error>
+      </app-password-field>
+
+      <app-inline-error [message]="formError"></app-inline-error>
+
+      <div class="auth-form__actions">
+        <button mat-flat-button color="primary" type="submit">Zaloguj</button>
+        <a class="auth-form__link" routerLink="/forgot-password">Nie pamietasz hasla?</a>
+      </div>
+    </form>
+
+    <div authCardFooter class="auth-card__footer-content">
+      <span>Nie masz konta?</span>
+      <a routerLink="/register">Zarejestruj sie</a>
+    </div>
+  </app-auth-form-card>
+</app-auth-layout>

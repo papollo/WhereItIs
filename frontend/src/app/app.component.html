@@ -1,24 +1,32 @@
-<div class="app-shell">
-  <nav class="sidebar" aria-label="Nawigacja boczna">
-    <div class="sidebar__title">WhereItIs</div>
-    <div class="sidebar__section">
-      <a class="sidebar__link" routerLink="/rooms" routerLinkActive="is-active">
-        Pokoje
-      </a>
-      <a class="sidebar__link" routerLink="/search" routerLinkActive="is-active">
-        Wyszukiwanie
-      </a>
-      <a class="sidebar__link" routerLink="/user/edit" routerLinkActive="is-active">
-        Edycja uzytkownika
-      </a>
-    </div>
-    <div class="sidebar__section sidebar__section--bottom">
-      <button class="sidebar__link is-disabled" type="button" disabled>
-        Wyloguj
-      </button>
-    </div>
-  </nav>
-  <main class="app-content">
+<ng-container *ngIf="isAuthRoute; else appShell">
+  <main class="auth-content">
     <router-outlet />
   </main>
-</div>
+</ng-container>
+
+<ng-template #appShell>
+  <div class="app-shell">
+    <nav class="sidebar" aria-label="Nawigacja boczna">
+      <div class="sidebar__title">WhereItIs</div>
+      <div class="sidebar__section">
+        <a class="sidebar__link" routerLink="/rooms" routerLinkActive="is-active">
+          Pokoje
+        </a>
+        <a class="sidebar__link" routerLink="/search" routerLinkActive="is-active">
+          Wyszukiwanie
+        </a>
+        <a class="sidebar__link" routerLink="/user/edit" routerLinkActive="is-active">
+          Edycja uzytkownika
+        </a>
+      </div>
+      <div class="sidebar__section sidebar__section--bottom">
+        <button class="sidebar__link is-disabled" type="button" disabled>
+          Wyloguj
+        </button>
+      </div>
+    </nav>
+    <main class="app-content">
+      <router-outlet />
+    </main>
+  </div>
+</ng-template>

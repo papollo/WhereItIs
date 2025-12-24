@@ -1,0 +1,12 @@
+<section class="auth-card">
+  <header class="auth-card__header">
+    <h2>{{ title }}</h2>
+    <p *ngIf="subtitle">{{ subtitle }}</p>
+  </header>
+  <div class="auth-card__body">
+    <ng-content></ng-content>
+  </div>
+  <footer class="auth-card__footer" *ngIf="showFooter">
+    <ng-content select="[authCardFooter]"></ng-content>
+  </footer>
+</section>

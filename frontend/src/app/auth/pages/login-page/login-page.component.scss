@@ -1,0 +1,20 @@
+.auth-form {
+  display: grid;
+  gap: 16px;
+}
+
+.auth-form__actions {
+  display: grid;
+  gap: 8px;
+  align-items: start;
+}
+
+.auth-form__link {
+  font-size: 13px;
+  color: rgba(31, 31, 28, 0.7);
+  text-decoration: none;
+}
+
+.auth-form__link:hover {
+  text-decoration: underline;
+}

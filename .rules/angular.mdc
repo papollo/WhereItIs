@@ -1,15 +1,40 @@
----
-globs: *.ts
-alwaysApply: false
----
-- Używaj aktualnych wzorców Angular
+# AI Rules for wherItIs
 
-Preferuj standalone components, inject() zamiast starego constructor(private svc:...), moduły twórz tylko gdy są naprawdę potrzebne. Nie używaj przestarzałych API, jeśli istnieje nowszy, rekomendowany sposób.
+WhereItIs to webowa aplikacja desktopowa, która pomaga użytkownikom odnajdywać przedmioty w domu poprzez tworzenie
+wirtualnych odwzorowań pomieszczeń, mebli oraz ich zawartości. Użytkownik buduje proste mapy pomieszczeń w formie siatki
+oraz przypisuje przedmioty do stworzonych wcześniej mebli. Aplikacja oferuje wyszukiwarkę, która pozwala szybko odnaleźć
+przedmiot po jego nazwie, eliminując konieczność fizycznego przeszukiwania mieszkania.
 
-- Trzymaj logikę w serwisach, nie w komponentach
+Aplikacja została zaprojektowana z myślą o prostocie, minimalizmie i możliwości szybkiego wykonania najważniejszego
+zadania: odnalezienia zgubionej rzeczy. Największą korzyść osiągną rodzice, którzy często odkładają przedmioty w różnych
+miejscach i chcą łatwo je odnajdywać.
 
-Komponenty powinny głównie obsługiwać widok (UI). Logikę biznesową, komunikację z API i zarządzanie stanem przenoś do serwisów lub dedykowanych warstw.
+## FRONTEND
 
-- Dbaj o wydajność i czytelność widoków
+### Guidelines for ANGULAR
 
-Używaj *ngIf, *ngFor z trackBy i unikania ciężkich operacji w template’ach. Nie wkładaj złożonej logiki do interpolacji – przenoś ją do metod lub getterów, jeśli musi być w komponencie.
+#### ANGULAR_CODING_STANDARDS
+
+- Use standalone components, directives, and pipes instead of NgModules
+- Implement signals for state management instead of traditional RxJS-based approaches
+- Use the new inject function instead of constructor injection
+- Implement control flow with @if, @for, and @switch instead of *ngIf, *ngFor, etc.
+- Leverage functional guards and resolvers instead of class-based ones
+- Use the new deferrable views for improved loading states
+- Implement OnPush change detection strategy for improved performance
+- Use TypeScript decorators with explicit visibility modifiers (public, private)
+- Leverage Angular CLI for schematics and code generation
+- Implement proper lazy loading with loadComponent and loadChildren
+
+#### ANGULAR_MATERIAL
+
+- Create a dedicated module for Angular Material imports to keep the app module clean
+- Use theme mixins to customize component styles instead of overriding CSS
+- Implement OnPush change detection for performance critical components
+- Leverage the CDK (Component Development Kit) for custom component behaviors
+- Use Material's form field components with reactive forms for consistent validation UX
+- Implement accessibility attributes and ARIA labels for interactive components
+- Use the new Material 3 design system updates where available
+- Leverage the Angular Material theming system for consistent branding
+- Implement proper typography hierarchy using the Material typography system
+- Use Angular Material's built-in a11y features like focus indicators and keyboard navigation

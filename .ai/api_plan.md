@@ -40,6 +40,32 @@
   - Success: 200 OK
   - Errors: 401 Invalid credentials
 
+- POST `/auth/forgot-password`
+  - Description: Send password reset link to email
+  - Request JSON
+    ```json
+    { "email": "user@example.com" }
+    ```
+  - Response JSON
+    ```json
+    { "message": "reset email sent" }
+    ```
+  - Success: 200 OK
+  - Errors: 400 Invalid input, 404 Email not found
+
+- POST `/auth/reset-password`
+  - Description: Set a new password using reset token (from email link)
+  - Request JSON
+    ```json
+    { "access_token": "...", "password": "new-strong-password" }
+    ```
+  - Response JSON
+    ```json
+    { "message": "password updated" }
+    ```
+  - Success: 200 OK
+  - Errors: 400 Invalid input or expired token
+
 - POST `/auth/logout`
   - Description: Revoke current session token
   - Request JSON: none
@@ -371,4 +397,3 @@
   - furniture placements must fit within room cells.
   - no furniture overlap within a room (validated in API or database trigger).
   - room cells form a valid shape in 0..49 grid.
-
