@@ -16,7 +16,7 @@ export const appRoutes: Routes = [
   { path: 'login', component: LoginPageComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterPageComponent, canActivate: [guestGuard] },
   { path: 'forgot-password', component: ForgotPasswordPageComponent, canActivate: [guestGuard] },
-  { path: 'reset-password', component: ResetPasswordPageComponent, canActivate: [guestGuard] },
+  { path: 'reset-password', component: ResetPasswordPageComponent },
   { path: 'rooms', component: RoomsListPageComponent, canActivate: [authGuard] },
   { path: 'rooms/new', component: RoomEditorPageComponent, canActivate: [authGuard] },
   { path: 'rooms/:roomId', component: RoomDetailsPageComponent, canActivate: [authGuard] },

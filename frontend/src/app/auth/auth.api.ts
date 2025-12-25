@@ -107,7 +107,11 @@ export class AuthApi {
     }
 
     const email = command.email.trim();
-    const { error } = await this.supabase.getClient().auth.resetPasswordForEmail(email);
+    const { error } = await this.supabase
+      .getClient()
+      .auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
 
     if (error) {
       throw mapForgotPasswordAuthError(error);

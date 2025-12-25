@@ -53,6 +53,7 @@ export class LoginPageComponent {
 
   async submit(): Promise<void> {
     this.formError = '';
+    this.clearCredentialError();
     this.form.markAllAsTouched();
 
     if (this.form.invalid) {
@@ -66,14 +67,67 @@ export class LoginPageComponent {
       this.snackBar.open('Zalogowano pomyslnie.', 'Zamknij', { duration: 2500 });
       await this.router.navigate(['/rooms']);
     } catch (err) {
-      this.formError = this.formatError(err);
+      if (this.isInvalidCredentials(err)) {
+        this.applyCredentialError();
+        this.formError = 'Nieprawidlowy email lub haslo.';
+      } else {
+        this.formError = this.formatError(err);
+      }
     } finally {
       this.isSubmitting = false;
     }
   }
 
+  private isInvalidCredentials(error: unknown): boolean {
+    if (error instanceof ApiError) {
+      return error.code === 'UNAUTHORIZED';
+    }
+
+    if (error instanceof Error) {
+      return error.message.toLowerCase().includes('invalid login credentials');
+    }
+
+    if (!error || typeof error !== 'object') {
+      return false;
+    }
+
+    const candidate = error as { code?: string; message?: string };
+    if (candidate.code === 'invalid_credentials') {
+      return true;
+    }
+
+    return candidate.message?.toLowerCase().includes('invalid login credentials') ?? false;
+  }
+
+  private applyCredentialError(): void {
+    const control = this.form.controls.password;
+    const errors = control.errors ?? {};
+
+    if (errors['invalidCredentials']) {
+      return;
+    }
+
+    control.setErrors({ ...errors, invalidCredentials: true });
+  }
+
+  private clearCredentialError(): void {
+    const control = this.form.controls.password;
+    const errors = control.errors;
+
+    if (!errors || !errors['invalidCredentials']) {
+      return;
+    }
+
+    const { invalidCredentials, ...remainingErrors } = errors;
+    control.setErrors(Object.keys(remainingErrors).length ? remainingErrors : null);
+  }
+
   private formatError(error: unknown): string {
     if (error instanceof ApiError) {
+      if (error.code === 'UNAUTHORIZED') {
+        return 'Nieprawidlowy email lub haslo.';
+      }
+
       return error.message;
     }
 

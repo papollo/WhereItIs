@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -13,6 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ApiError } from '../../../shared/api-error';
+import { SupabaseService } from '../../../../db/supabase.service';
 import { AuthApi } from '../../auth.api';
 import { AuthFormCardComponent } from '../../components/auth-form-card.component';
 import { InlineErrorComponent } from '../../components/inline-error.component';
@@ -48,11 +49,12 @@ const passwordMatchValidator = (control: AbstractControl): ValidationErrors | nu
   templateUrl: './reset-password-page.component.html',
   styleUrls: ['./reset-password-page.component.scss'],
 })
-export class ResetPasswordPageComponent {
+export class ResetPasswordPageComponent implements OnInit {
   private readonly authApi = inject(AuthApi);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly supabase = inject(SupabaseService);
 
   readonly form = new FormGroup(
     {
@@ -73,11 +75,34 @@ export class ResetPasswordPageComponent {
   private accessToken = '';
   private refreshToken = '';
 
-  constructor() {
+  async ngOnInit(): Promise<void> {
     const fragment = this.route.snapshot.fragment ?? '';
     const tokens = parseAuthFragment(fragment);
-    this.accessToken = tokens.accessToken ?? '';
-    this.refreshToken = tokens.refreshToken ?? '';
+    const queryAccessToken = this.route.snapshot.queryParamMap.get('access_token') ?? '';
+    const queryRefreshToken = this.route.snapshot.queryParamMap.get('refresh_token') ?? '';
+
+    this.accessToken = tokens.accessToken ?? queryAccessToken;
+    this.refreshToken = tokens.refreshToken ?? queryRefreshToken;
+
+    if (!this.accessToken || !this.refreshToken) {
+      const code = this.route.snapshot.queryParamMap.get('code');
+
+      if (code) {
+        const { data, error } = await this.supabase.getClient().auth.exchangeCodeForSession(code);
+        if (!error && data.session) {
+          this.accessToken = data.session.access_token;
+          this.refreshToken = data.session.refresh_token;
+        }
+      }
+    }
+
+    if (!this.accessToken || !this.refreshToken) {
+      const { data } = await this.supabase.getClient().auth.getSession();
+      if (data.session) {
+        this.accessToken = data.session.access_token;
+        this.refreshToken = data.session.refresh_token;
+      }
+    }
 
     if (!this.accessToken || !this.refreshToken) {
       this.formError = 'Brakuje tokenu resetu hasla.';

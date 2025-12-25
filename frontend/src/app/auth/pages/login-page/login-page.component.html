@@ -17,7 +17,11 @@
         label="Haslo"
         autocomplete="current-password"
       >
-        <mat-error *ngIf="form.controls.password.hasError('required')">
+        <mat-error
+          *ngIf="
+            form.controls.password.hasError('required') && form.controls.password.touched
+          "
+        >
           Haslo jest wymagane.
         </mat-error>
       </app-password-field>

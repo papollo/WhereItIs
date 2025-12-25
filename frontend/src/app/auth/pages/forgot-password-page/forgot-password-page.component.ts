@@ -1,10 +1,9 @@
 import { NgIf } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { RouterLink } from '@angular/router';
 import { ApiError } from '../../../shared/api-error';
 import { AuthApi } from '../../auth.api';
@@ -21,7 +20,6 @@ import { AuthLayoutComponent } from '../../layouts/auth-layout.component';
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSnackBarModule,
     RouterLink,
     AuthLayoutComponent,
     AuthFormCardComponent,
@@ -32,7 +30,7 @@ import { AuthLayoutComponent } from '../../layouts/auth-layout.component';
 })
 export class ForgotPasswordPageComponent {
   private readonly authApi = inject(AuthApi);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   readonly form = new FormGroup({
     email: new FormControl('', {
@@ -43,6 +41,7 @@ export class ForgotPasswordPageComponent {
 
   formError = '';
   isSubmitting = false;
+  isEmailSent = false;
 
   async submit(): Promise<void> {
     this.formError = '';
@@ -56,9 +55,8 @@ export class ForgotPasswordPageComponent {
 
     try {
       await this.authApi.requestPasswordReset(this.form.getRawValue());
-      this.snackBar.open('Link resetu hasla zostal wyslany.', 'Zamknij', {
-        duration: 4000,
-      });
+      this.isEmailSent = true;
+      this.cdr.detectChanges();
     } catch (err) {
       this.formError = this.formatError(err);
     } finally {
