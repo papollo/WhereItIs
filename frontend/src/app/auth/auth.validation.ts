@@ -41,6 +41,14 @@ function validateAccessToken(value: string): string | null {
   return null;
 }
 
+function validateRefreshToken(value: string): string | null {
+  if (value.trim().length === 0) {
+    return 'refresh_token is required';
+  }
+
+  return null;
+}
+
 export function validateAuthSignupCommand(
   command: AuthSignupCommand
 ): Record<keyof AuthSignupCommand, string> | null {
@@ -109,12 +117,17 @@ export function validateAuthResetPasswordCommand(
 
   const accessTokenError = validateAccessToken(command.access_token);
   if (accessTokenError) {
-    errors.access_token = accessTokenError;
+    errors['access_token'] = accessTokenError;
+  }
+
+  const refreshTokenError = validateRefreshToken(command.refresh_token);
+  if (refreshTokenError) {
+    errors['refresh_token'] = refreshTokenError;
   }
 
   const passwordError = validatePassword(command.password);
   if (passwordError) {
-    errors.password = passwordError;
+    errors['password'] = passwordError;
   }
 
   if (Object.keys(errors).length === 0) {

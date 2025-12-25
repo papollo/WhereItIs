@@ -25,7 +25,9 @@
       <app-inline-error [message]="formError"></app-inline-error>
 
       <div class="auth-form__actions">
-        <button mat-flat-button color="primary" type="submit">Zaloguj</button>
+        <button mat-flat-button color="primary" type="submit" [disabled]="isSubmitting">
+          Zaloguj
+        </button>
         <a class="auth-form__link" routerLink="/forgot-password">Nie pamietasz hasla?</a>
       </div>
     </form>

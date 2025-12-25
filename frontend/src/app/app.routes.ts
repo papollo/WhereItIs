@@ -8,18 +8,20 @@ import { ForgotPasswordPageComponent } from './auth/pages/forgot-password-page/f
 import { LoginPageComponent } from './auth/pages/login-page/login-page.component';
 import { RegisterPageComponent } from './auth/pages/register-page/register-page.component';
 import { ResetPasswordPageComponent } from './auth/pages/reset-password-page/reset-password-page.component';
+import { authGuard } from './auth/guards/auth.guard';
+import { guestGuard } from './auth/guards/guest.guard';
 
 export const appRoutes: Routes = [
   { path: '', redirectTo: 'rooms', pathMatch: 'full' },
-  { path: 'login', component: LoginPageComponent },
-  { path: 'register', component: RegisterPageComponent },
-  { path: 'forgot-password', component: ForgotPasswordPageComponent },
-  { path: 'reset-password', component: ResetPasswordPageComponent },
-  { path: 'rooms', component: RoomsListPageComponent },
-  { path: 'rooms/new', component: RoomEditorPageComponent },
-  { path: 'rooms/:roomId', component: RoomDetailsPageComponent },
-  { path: 'rooms/:roomId/edit', component: RoomEditorPageComponent },
-  { path: 'search', component: SearchPageComponent },
-  { path: 'user/edit', component: UserEditPageComponent },
+  { path: 'login', component: LoginPageComponent, canActivate: [guestGuard] },
+  { path: 'register', component: RegisterPageComponent, canActivate: [guestGuard] },
+  { path: 'forgot-password', component: ForgotPasswordPageComponent, canActivate: [guestGuard] },
+  { path: 'reset-password', component: ResetPasswordPageComponent, canActivate: [guestGuard] },
+  { path: 'rooms', component: RoomsListPageComponent, canActivate: [authGuard] },
+  { path: 'rooms/new', component: RoomEditorPageComponent, canActivate: [authGuard] },
+  { path: 'rooms/:roomId', component: RoomDetailsPageComponent, canActivate: [authGuard] },
+  { path: 'rooms/:roomId/edit', component: RoomEditorPageComponent, canActivate: [authGuard] },
+  { path: 'search', component: SearchPageComponent, canActivate: [authGuard] },
+  { path: 'user/edit', component: UserEditPageComponent, canActivate: [authGuard] },
   { path: '**', redirectTo: 'rooms' },
 ];

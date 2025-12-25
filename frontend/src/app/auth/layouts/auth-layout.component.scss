@@ -10,7 +10,7 @@
 }
 
 .auth-layout__panel {
-  width: min(960px, 100%);
+  width: min(1200px, 100%);
   display: grid;
   gap: 32px;
   align-items: center;
@@ -55,11 +55,12 @@
 .auth-layout__content {
   display: flex;
   justify-content: flex-start;
+  width: 100%;
 }
 
 @media (min-width: 900px) {
   .auth-layout__panel {
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: 1fr 1.3fr;
   }
 
   .auth-layout__content {

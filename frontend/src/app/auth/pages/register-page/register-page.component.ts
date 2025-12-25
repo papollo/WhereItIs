@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -11,7 +11,10 @@ import {
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RouterLink } from '@angular/router';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { Router, RouterLink } from '@angular/router';
+import { ApiError } from '../../../shared/api-error';
+import { AuthApi } from '../../auth.api';
 import { AuthFormCardComponent } from '../../components/auth-form-card.component';
 import { InlineErrorComponent } from '../../components/inline-error.component';
 import { PasswordFieldComponent } from '../../components/password-field.component';
@@ -37,6 +40,7 @@ const passwordMatchValidator = (control: AbstractControl): ValidationErrors | nu
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
     RouterLink,
     AuthLayoutComponent,
     AuthFormCardComponent,
@@ -47,6 +51,10 @@ const passwordMatchValidator = (control: AbstractControl): ValidationErrors | nu
   styleUrls: ['./register-page.component.scss'],
 })
 export class RegisterPageComponent {
+  private readonly authApi = inject(AuthApi);
+  private readonly router = inject(Router);
+  private readonly snackBar = inject(MatSnackBar);
+
   readonly form = new FormGroup(
     {
       email: new FormControl('', {
@@ -66,8 +74,41 @@ export class RegisterPageComponent {
   );
 
   formError = '';
+  isSubmitting = false;
 
-  submit(): void {
+  async submit(): Promise<void> {
+    this.formError = '';
     this.form.markAllAsTouched();
+
+    if (this.form.invalid) {
+      return;
+    }
+
+    this.isSubmitting = true;
+
+    try {
+      const { email, password } = this.form.getRawValue();
+      await this.authApi.signUp({ email, password });
+      this.snackBar.open('Konto utworzone. Sprawdz email, aby potwierdzic.', 'Zamknij', {
+        duration: 4000,
+      });
+      await this.router.navigate(['/login']);
+    } catch (err) {
+      this.formError = this.formatError(err);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  private formatError(error: unknown): string {
+    if (error instanceof ApiError) {
+      return error.message;
+    }
+
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    return 'Wystapil nieznany blad.';
   }
 }

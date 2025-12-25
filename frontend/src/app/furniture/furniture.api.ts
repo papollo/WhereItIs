@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseService } from '../../db/supabase.service';
-import { DEFAULT_USER_ID } from '../../db/supabase.client';
 import type {
   CreateFurnitureCommand,
   CreateFurniturePayload,
@@ -27,12 +26,14 @@ import {
   validateListFurnitureQuery,
   validateUpdateFurnitureCommand,
 } from './furniture.validation';
+import { AuthSessionService } from '../auth/auth-session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FurnitureApi {
   private readonly supabase = inject(SupabaseService);
+  private readonly authSession = inject(AuthSessionService);
 
   async listFurniture(query: ListFurnitureQuery): Promise<FurnitureDto[]> {
     const validationErrors = validateListFurnitureQuery(query);
@@ -99,9 +100,10 @@ export class FurnitureApi {
       throw ApiError.validation(validationErrors);
     }
 
+    const userId = this.authSession.getUserIdOrThrow();
     const payload: CreateFurniturePayload = {
-      user_id: DEFAULT_USER_ID,
-      created_by: DEFAULT_USER_ID,
+      user_id: userId,
+      created_by: userId,
       ...command,
     };
 

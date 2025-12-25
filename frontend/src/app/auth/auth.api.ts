@@ -122,15 +122,13 @@ export class AuthApi {
       throw ApiError.validation(validationErrors);
     }
 
-    if (command.refresh_token) {
-      const { error } = await this.supabase.getClient().auth.setSession({
-        access_token: command.access_token,
-        refresh_token: command.refresh_token,
-      });
+    const { error: sessionError } = await this.supabase.getClient().auth.setSession({
+      access_token: command.access_token,
+      refresh_token: command.refresh_token,
+    });
 
-      if (error) {
-        throw mapResetPasswordAuthError(error);
-      }
+    if (sessionError) {
+      throw mapResetPasswordAuthError(sessionError);
     }
 
     const { error } = await this.supabase.getClient().auth.updateUser({

@@ -3,6 +3,12 @@
   gap: 16px;
 }
 
+.auth-form mat-form-field,
+.auth-form app-password-field {
+  width: 100%;
+  display: block;
+}
+
 .auth-form__actions {
   display: grid;
   gap: 8px;

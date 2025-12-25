@@ -63,6 +63,11 @@
   cursor: not-allowed;
 }
 
+.sidebar__link:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .app-content {
   flex: 1;
   padding: 24px;

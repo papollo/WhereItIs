@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { SupabaseService } from '../../db/supabase.service';
-import { DEFAULT_USER_ID } from '../../db/supabase.client';
 import type {
   CreateRoomCommand,
   CreateRoomPayload,
@@ -38,12 +37,14 @@ import {
   validateRoomId,
   validateUpdateRoomCommand,
 } from './rooms.validation';
+import { AuthSessionService } from '../auth/auth-session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoomsApi {
   private readonly supabase = inject(SupabaseService);
+  private readonly authSession = inject(AuthSessionService);
 
   async getRoom(roomId: UUID): Promise<RoomDto> {
     const idErrors = validateRoomId(roomId);
@@ -123,10 +124,11 @@ export class RoomsApi {
     }
 
     const client = this.supabase.getClient();
+    const userId = this.authSession.getUserIdOrThrow();
 
     const payload: CreateRoomPayload = {
-      user_id: DEFAULT_USER_ID,
-      created_by: DEFAULT_USER_ID,
+      user_id: userId,
+      created_by: userId,
       ...command,
     };
 

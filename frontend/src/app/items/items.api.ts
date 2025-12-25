@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { DEFAULT_USER_ID } from '../../db/supabase.client';
 import { SupabaseService } from '../../db/supabase.service';
 import { ApiError } from '../shared/api-error';
 import {
@@ -22,12 +21,14 @@ import {
   validateItemId,
   validateListFurnitureItemsQuery,
 } from './items.validation';
+import { AuthSessionService } from '../auth/auth-session.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ItemsApi {
   private readonly supabase = inject(SupabaseService);
+  private readonly authSession = inject(AuthSessionService);
 
   async listFurnitureItems(query: ListFurnitureItemsQuery): Promise<ItemListResponseDto> {
     const validationErrors = validateListFurnitureItemsQuery(query);
@@ -80,13 +81,14 @@ export class ItemsApi {
 
     const created: ItemListItemDto[] = [];
     const failed: ItemCreateFailureDto[] = [];
+    const userId = this.authSession.getUserIdOrThrow();
 
     for (const item of request.items) {
       const payload = {
         furniture_id: furnitureId,
         name: item.name.trim(),
-        user_id: DEFAULT_USER_ID,
-        created_by: DEFAULT_USER_ID,
+        user_id: userId,
+        created_by: userId,
       };
 
       const { data, error, status } = await this.supabase

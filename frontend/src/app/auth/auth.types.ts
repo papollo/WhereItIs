@@ -30,7 +30,7 @@ export type AuthForgotPasswordResponseDto = {
 export type AuthResetPasswordCommand = {
   access_token: string;
   password: string;
-  refresh_token?: string;
+  refresh_token: string;
 };
 
 export type AuthResetPasswordResponseDto = {
