@@ -1,6 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { of } from 'rxjs';
 import { AppComponent } from './app.component';
+import { AuthSessionService } from './auth/auth-session.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
@@ -8,6 +10,12 @@ describe('AppComponent', () => {
       imports: [
         RouterTestingModule,
         AppComponent,
+      ],
+      providers: [
+        {
+          provide: AuthSessionService,
+          useValue: { isAuthenticated$: of(false) },
+        },
       ],
     }).compileComponents();
   });
@@ -18,10 +26,10 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'WhereItIs'`, () => {
+  it('should expose auth state observable', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('WhereItIs');
+    expect(app.isAuthenticated$).toBeTruthy();
   });
 
   it('should render router outlet', () => {

@@ -18,6 +18,6 @@ Hosting:
 
 Testing:
 - Unit: Karma + Jasmine
-- E2E: Playwright (planned)
+- E2E: Playwright
 
 </tech-stack>

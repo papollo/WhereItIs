@@ -25,7 +25,7 @@ WhereItIs lets users create virtual rooms on a grid, add furniture with colors a
 - Angular Material for UI components
 - Supabase for backend services (as specified)
 - Unit tests: Karma + Jasmine
-- E2E tests: Playwright (planned)
+- E2E tests: Playwright
 - GitHub Actions for CI/CD
 - VPS hosting target
 
@@ -51,6 +51,7 @@ WhereItIs lets users create virtual rooms on a grid, add furniture with colors a
 - `npm run build` — create a production build.
 - `npm run watch` — rebuild on file changes using the development config.
 - `npm test` — run Karma/Jasmine tests in watch mode.
+- `npm run test:e2e` — run Playwright end-to-end tests.
 
 ## 6. Project scope
 - Core features: create/edit/delete rooms with colored 0.5m grids (up to 20m × 20m); add/edit/delete furniture per room with color and description; modal-driven item lists allowing multiple additions and deletions; real-time or submit-based search that lists matching furniture and links to the correct room/mebel; email/password auth with hashed passwords and user-scoped data; onboarding flow that can be replayed; key event logging (`room_created`, `furniture_created`, `item_added`, `search_performed`); dismissible error toasts.
