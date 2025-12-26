@@ -16,4 +16,8 @@ CI/CD:
 Hosting:
 - VPS
 
+Testing:
+- Unit: Karma + Jasmine
+- E2E: Playwright (planned)
+
 </tech-stack>

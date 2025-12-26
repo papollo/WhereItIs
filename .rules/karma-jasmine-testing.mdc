@@ -1,0 +1,15 @@
+## TESTING
+
+### Guidelines for Unit Tests
+
+#### KARMA + JASMINE
+
+- Use TestBed for configuring the testing module
+- Prefer shallow tests with mocks for external services
+- Use fakeAsync/tick for async timing control
+- Keep specs deterministic and fast
+- Use spies to isolate side effects
+- Prefer async/await with waitForAsync for async setup
+- Reset TestBed between suites when needed
+- Use focused matchers (toEqual, toBeTruthy, toContain)
+- Keep one component/service as the primary subject per spec file

@@ -24,6 +24,8 @@ WhereItIs lets users create virtual rooms on a grid, add furniture with colors a
 - Angular 21 with TypeScript, HTML5/CSS3, and RxJS
 - Angular Material for UI components
 - Supabase for backend services (as specified)
+- Unit tests: Karma + Jasmine
+- E2E tests: Playwright (planned)
 - GitHub Actions for CI/CD
 - VPS hosting target
 
