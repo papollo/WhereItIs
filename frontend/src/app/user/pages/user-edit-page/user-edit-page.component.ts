@@ -1,5 +1,6 @@
 
-import { HttpClient } from '@angular/common/http';
+import { DOCUMENT } from '@angular/common';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -23,6 +24,7 @@ export class UserEditPageComponent {
   private readonly itemsApi = inject(ItemsApi);
   private readonly snackBar = inject(MatSnackBar);
   private readonly http = inject(HttpClient);
+  private readonly document = inject(DOCUMENT);
 
   isSeeding = false;
 
@@ -34,9 +36,8 @@ export class UserEditPageComponent {
     this.isSeeding = true;
 
     try {
-      const seedData = await firstValueFrom(
-        this.http.get<SeedData>('assets/seed-data.json')
-      );
+      const seedUrl = new URL('assets/seed-data.json', this.document.baseURI).toString();
+      const seedData = await firstValueFrom(this.http.get<SeedData>(seedUrl));
 
       for (const roomSeed of seedData.rooms) {
         const room = await this.roomsApi.createRoom({
@@ -79,6 +80,12 @@ export class UserEditPageComponent {
   }
 
   private formatError(error: unknown): string {
+    if (error instanceof HttpErrorResponse) {
+      if (error.url?.includes('seed-data.json') && error.status === 404) {
+        return 'Nie udalo sie pobrac seed-data.json. Sprawdz, czy plik istnieje w assets.';
+      }
+    }
+
     if (error instanceof ApiError) {
       return error.message;
     }

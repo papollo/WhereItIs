@@ -2,12 +2,13 @@ import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import type { FurnitureListItemVM } from '../furniture.view-models';
 
 @Component({
   selector: 'app-furniture-card',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, DatePipe],
+  imports: [MatCardModule, MatButtonModule, MatIconModule, DatePipe],
   template: `
     <mat-card
       class="furniture-card"
@@ -34,22 +35,22 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
           </div>
           <div class="furniture-card__actions">
             <button
-              mat-stroked-button
+              mat-icon-button
               color="primary"
               type="button"
               (click)="handleEdit($event)"
               aria-label="Edytuj mebel"
               >
-              Edytuj
+              <mat-icon aria-hidden="true">edit</mat-icon>
             </button>
             <button
-              mat-stroked-button
+              mat-icon-button
               color="warn"
               type="button"
               (click)="handleDelete($event)"
               aria-label="Usun mebel"
               >
-              Usun
+              <mat-icon aria-hidden="true">delete</mat-icon>
             </button>
           </div>
         </div>
@@ -114,8 +115,24 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
 
       .furniture-card__actions {
         display: flex;
-        gap: 8px;
+        gap: 2px;
         justify-self: end;
+      }
+
+      .furniture-card__actions button {
+        border-radius: 999px;
+        width: 32px;
+        height: 32px;
+        padding: 4px;
+        line-height: 1;
+        min-width: 32px;
+        min-height: 32px;
+        transition: background-color 0.15s ease, box-shadow 0.15s ease;
+      }
+
+      .furniture-card__actions button:hover {
+        background-color: rgba(0, 0, 0, 0.06);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.12) inset;
       }
 
     `,

@@ -13,6 +13,11 @@
 .room-details__content {
   display: grid;
   gap: 24px;
+  grid-template-columns: minmax(460px, 560px) minmax(0, 1fr);
+  grid-template-areas:
+    "header header"
+    "furniture grid";
+  align-items: start;
 }
 
 .room-details__header {
@@ -21,6 +26,7 @@
   gap: 16px;
   align-items: center;
   flex-wrap: wrap;
+  grid-area: header;
 }
 
 .room-details__title {
@@ -49,6 +55,10 @@
   border-radius: 16px;
   background: #f7f7f7;
   overflow: hidden;
+  grid-area: grid;
+  display: grid;
+  place-items: center;
+  min-height: calc(100vh - 220px);
 }
 
 .room-details__hint {
@@ -59,6 +69,10 @@
 .room-details__furniture {
   display: grid;
   gap: 16px;
+  grid-area: furniture;
+  max-height: calc(100vh - 220px);
+  overflow: auto;
+  min-height: 0;
 }
 
 .room-details__section-header {
@@ -86,4 +100,14 @@
 
 .room-details__empty h1 {
   margin: 0;
+}
+
+@media (max-width: 900px) {
+  .room-details__content {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "header"
+      "grid"
+      "furniture";
+  }
 }

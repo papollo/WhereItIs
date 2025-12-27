@@ -44,8 +44,7 @@
         </section>
         <section class="room-details__furniture">
           <header class="room-details__section-header">
-            <h2>Meble</h2>
-            <span>{{ state.furniture.length }} szt.</span>
+            <h2>Meble <span>{{ state.furniture.length }} szt.</span></h2>
           </header>
           @if (state.error) {
             <p class="room-details__error">{{ describeError(state.error) }}</p>
