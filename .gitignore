@@ -39,3 +39,5 @@ desktop.ini
 
 # Cursor
 .cursor/
+
+.env.test

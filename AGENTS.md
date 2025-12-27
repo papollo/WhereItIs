@@ -27,3 +27,6 @@ This repository hosts the Angular 21 project `where_it_is`. Use the notes below 
 ## Commit & Pull Request Guidelines
 - Commit messages in the repo are short and present-tense (e.g., `Add search layout`, `Fix card spacing`). Keep commits focused and include scope when useful.
 - Pull requests should briefly state what changed, why, and any follow-up todos; attach screenshots for UI updates and link issues/tasks when available. Note testing performed (e.g., `npm test`, manual smoke on `ng serve`).
+
+## Codex Exclusions
+- Do not read or edit `.env.test`.
