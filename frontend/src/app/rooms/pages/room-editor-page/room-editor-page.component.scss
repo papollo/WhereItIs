@@ -30,6 +30,19 @@
 .room-editor__content {
   display: grid;
   gap: 24px;
+  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  align-items: start;
+}
+
+.room-editor__left {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-self: stretch;
+}
+
+.room-editor__form {
+  width: 100%;
 }
 
 .room-editor__grid {
@@ -40,8 +53,33 @@
   background: #f7f7f7;
 }
 
+.room-editor__brush-panel {
+  display: grid;
+  gap: 8px;
+}
+
+.room-editor__brush-label {
+  font-weight: 600;
+}
+
+.room-editor__actions {
+  margin-top: auto;
+  width: 100%;
+}
+
 .room-editor__brush {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
   justify-self: start;
+}
+
+:host ::ng-deep .room-editor__brush .mat-button-toggle {
+  flex: 1 1 0;
+}
+
+:host ::ng-deep .room-editor__brush .mat-button-toggle-button {
+  width: 100%;
 }
 
 .room-editor__hint {
@@ -64,4 +102,14 @@
   padding: 24px;
   border-radius: 16px;
   border: 1px dashed rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 960px) {
+  .room-editor__content {
+    grid-template-columns: 1fr;
+  }
+
+  .room-editor__brush {
+    flex-wrap: wrap;
+  }
 }

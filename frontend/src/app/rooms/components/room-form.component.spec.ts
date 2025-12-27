@@ -43,14 +43,12 @@ describe('RoomFormComponent', () => {
     expect(component.form.controls.color.value).toBe('#abcdef');
   });
 
-  it('updates color input on typing', () => {
+  it('keeps color in sync with palette selection', () => {
     const fixture = TestBed.createComponent(RoomFormComponent);
     const component = fixture.componentInstance;
 
     fixture.detectChanges();
-    const colorInput = fixture.debugElement.queryAll(By.css('input'))[1];
-    colorInput.nativeElement.value = '#112233';
-    colorInput.triggerEventHandler('input', { target: colorInput.nativeElement });
+    component.onColorSelect('#112233');
 
     expect(component.form.controls.color.value).toBe('#112233');
   });

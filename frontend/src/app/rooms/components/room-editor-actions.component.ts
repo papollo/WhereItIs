@@ -7,14 +7,16 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [MatButtonModule],
   template: `
     <div class="room-editor-actions">
-      <button
-        mat-stroked-button
-        type="button"
-        data-testid="room-cancel-button"
-        (click)="cancelAction.emit()"
-      >
-        Anuluj
-      </button>
+      @if (showCancel) {
+        <button
+          mat-stroked-button
+          type="button"
+          data-testid="room-cancel-button"
+          (click)="cancelAction.emit()"
+        >
+          Anuluj
+        </button>
+      }
       <button
         mat-flat-button
         color="primary"
@@ -40,6 +42,7 @@ import { MatButtonModule } from '@angular/material/button';
 export class RoomEditorActionsComponent {
   @Input() canSave = false;
   @Input() isSaving = false;
+  @Input() showCancel = true;
   @Output() saveAction = new EventEmitter<void>();
   @Output() cancelAction = new EventEmitter<void>();
 }

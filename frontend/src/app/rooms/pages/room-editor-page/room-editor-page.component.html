@@ -22,27 +22,47 @@
       </section>
     }
 
-    @if (!state.notFound) {
+      @if (!state.notFound) {
       <section class="room-editor__content">
-        <app-room-form [value]="formValue" (valueChange)="updateForm($event)"></app-room-form>
+        <div class="room-editor__left">
+          <div class="room-editor__form">
+            <app-room-form [value]="formValue" (valueChange)="updateForm($event)"></app-room-form>
+          </div>
+          <div class="room-editor__brush-panel">
+            <span class="room-editor__brush-label">Szerokosc pedzla</span>
+            <mat-button-toggle-group
+              class="room-editor__brush"
+              [value]="brushSize"
+              (valueChange)="setBrushSize($event)"
+              aria-label="Rozmiar pedzla"
+            >
+              <mat-button-toggle [value]="1">1x1</mat-button-toggle>
+              <mat-button-toggle [value]="3">3x3</mat-button-toggle>
+              <mat-button-toggle [value]="5">5x5</mat-button-toggle>
+            </mat-button-toggle-group>
+          </div>
+          <app-room-editor-actions
+            class="room-editor__actions"
+            [canSave]="canSave()"
+            [isSaving]="state.isSaving"
+            [showCancel]="isEdit"
+            (saveAction)="save()"
+            (cancelAction)="cancel()"
+          ></app-room-editor-actions>
+        </div>
 
         <div class="room-editor__grid">
-          <h2>Siatka pokoju</h2>
-          <p class="room-editor__hint">
-            Kliknij komorki, aby je zaznaczyc. Kolejne komorki musza sie stykac.
-          </p>
-          <app-room-grid-editor [grid]="gridState" (setCell)="setCell($event)"></app-room-grid-editor>
+          <app-room-grid-editor
+            [grid]="gridState"
+            [fillColor]="formValue.color"
+            [brushSize]="brushSize"
+            (setCell)="setCell($event)"
+          ></app-room-grid-editor>
           @if (validationError) {
             <p class="room-editor__error">{{ validationError }}</p>
           }
         </div>
 
-        <app-room-editor-actions
-          [canSave]="canSave()"
-          [isSaving]="state.isSaving"
-          (saveAction)="save()"
-          (cancelAction)="cancel()"
-        ></app-room-editor-actions>
       </section>
     }
   </section>

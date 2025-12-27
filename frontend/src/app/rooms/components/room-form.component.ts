@@ -37,20 +37,6 @@ export type RoomFormValue = {
           [value]="form.controls.color.value"
           (valueChange)="onColorSelect($event)"
         ></app-room-color-picker>
-        <mat-form-field appearance="outline">
-          <mat-label>HEX</mat-label>
-          <input matInput formControlName="color" maxlength="7" data-testid="room-color-input" />
-          @if (form.controls.color.hasError('pattern')) {
-            <mat-error>
-              Podaj poprawny kolor, np. #aabbcc.
-            </mat-error>
-          }
-          @if (form.controls.color.hasError('required')) {
-            <mat-error>
-              Kolor jest wymagany.
-            </mat-error>
-          }
-        </mat-form-field>
       </div>
     </form>
     `,
