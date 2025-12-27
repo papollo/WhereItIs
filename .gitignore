@@ -40,4 +40,6 @@ desktop.ini
 # Cursor
 .cursor/
 
+# Environment files
 .env.test
+/frontend/src/environments/environment.e2e.ts
