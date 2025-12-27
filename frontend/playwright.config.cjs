@@ -1,6 +1,15 @@
-import { defineConfig } from '@playwright/test';
+const { defineConfig } = require('@playwright/test');
+const { existsSync } = require('node:fs');
+const path = require('node:path');
+const dotenv = require('dotenv');
 
-export default defineConfig({
+const envPath = path.resolve(__dirname, '../.env.test');
+
+if (existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+}
+
+module.exports = defineConfig({
   testDir: './e2e',
   timeout: 30_000,
   expect: {
@@ -21,7 +30,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run start -- --host=127.0.0.1 --port=4200',
+    command: 'npm run start -- --configuration=e2e --host=127.0.0.1 --port=4200',
     url: 'http://127.0.0.1:4200',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,
