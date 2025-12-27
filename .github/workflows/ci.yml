@@ -51,4 +51,10 @@ jobs:
           node -e "const fs=require('fs');const url=process.env.SUPABASE_URL_E2E;const key=process.env.SUPABASE_ANON_KEY_E2E;fs.writeFileSync('src/environments/environment.e2e.ts', \`export const environment = { production: false, supabaseUrl: \${JSON.stringify(url)}, supabaseAnonKey: \${JSON.stringify(key)} };\`);"
 
       - name: E2E tests
+        env:
+          E2E_USERNAME: ${{ secrets.E2E_USERNAME }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_USERNAME_ID: ${{ secrets.E2E_USERNAME_ID }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL_E2E }}
+          SUPABASE_PUBLIC_KEY: ${{ secrets.SUPABASE_ANON_KEY_E2E }}
         run: npm run test:e2e
