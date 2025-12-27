@@ -42,4 +42,4 @@ desktop.ini
 
 # Environment files
 .env.test
-/frontend/src/environments/environment.e2e.ts
+frontend/src/environments/environment.e2e.ts
