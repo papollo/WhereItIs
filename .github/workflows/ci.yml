@@ -43,5 +43,12 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
 
+      - name: Create e2e environment file
+        env:
+          SUPABASE_URL_E2E: ${{ secrets.SUPABASE_URL_E2E }}
+          SUPABASE_ANON_KEY_E2E: ${{ secrets.SUPABASE_ANON_KEY_E2E }}
+        run: |
+          node -e "const fs=require('fs');const url=process.env.SUPABASE_URL_E2E;const key=process.env.SUPABASE_ANON_KEY_E2E;fs.writeFileSync('src/environments/environment.e2e.ts', \`export const environment = { production: false, supabaseUrl: \${JSON.stringify(url)}, supabaseAnonKey: \${JSON.stringify(key)} };\`);"
+
       - name: E2E tests
         run: npm run test:e2e
