@@ -1,13 +1,15 @@
-import { NgIf } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-inline-error',
   standalone: true,
-  imports: [NgIf],
+  imports: [],
   template: `
-    <p class="inline-error" role="alert" *ngIf="message">{{ message }}</p>
-  `,
+    @if (message) {
+      <p class="inline-error" role="alert">{{ message }}</p>
+    }
+    `,
   styles: [
     `
       .inline-error {

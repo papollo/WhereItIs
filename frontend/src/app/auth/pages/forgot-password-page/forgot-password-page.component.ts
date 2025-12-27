@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,7 +15,6 @@ import { AuthLayoutComponent } from '../../layouts/auth-layout.component';
   selector: 'app-forgot-password-page',
   standalone: true,
   imports: [
-    NgIf,
     ReactiveFormsModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -23,8 +22,8 @@ import { AuthLayoutComponent } from '../../layouts/auth-layout.component';
     RouterLink,
     AuthLayoutComponent,
     AuthFormCardComponent,
-    InlineErrorComponent,
-  ],
+    InlineErrorComponent
+],
   templateUrl: './forgot-password-page.component.html',
   styleUrls: ['./forgot-password-page.component.scss'],
 })

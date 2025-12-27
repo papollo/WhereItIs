@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import type { SearchResultVM } from '../search.view-models';
 import { SearchResultItemComponent } from './search-result-item.component';
@@ -6,16 +6,17 @@ import { SearchResultItemComponent } from './search-result-item.component';
 @Component({
   selector: 'app-search-results-list',
   standalone: true,
-  imports: [NgFor, SearchResultItemComponent],
+  imports: [SearchResultItemComponent],
   template: `
     <section class="search-results" aria-label="Wyniki wyszukiwania">
-      <app-search-result-item
-        *ngFor="let item of items; trackBy: trackByResultId"
-        [item]="item"
-        (open)="open.emit($event)"
-      />
+      @for (item of items; track trackByResultId($index, item)) {
+        <app-search-result-item
+          [item]="item"
+          (open)="open.emit($event)"
+          />
+      }
     </section>
-  `,
+    `,
   styles: [
     `
       .search-results {

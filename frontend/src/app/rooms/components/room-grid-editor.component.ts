@@ -1,11 +1,11 @@
-import { NgFor } from '@angular/common';
+
 import { Component, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
 
 @Component({
   selector: 'app-room-grid-editor',
   standalone: true,
-  imports: [NgFor],
+  imports: [],
   template: `
     <section class="grid-editor" aria-label="Edytor siatki pokoju" data-testid="room-grid">
       <div
@@ -13,24 +13,25 @@ import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
         [style.gridTemplateColumns]="gridTemplateColumns"
         [style.--cell-size.px]="cellSizePx"
         [style.--fill-color]="fillColor"
-      >
-        <button
-          *ngFor="let cell of grid.cells; trackBy: trackByIndex"
-          type="button"
-          class="grid-editor__cell"
-          [class.grid-editor__cell--filled]="cell.filled"
-          [class.grid-editor__cell--disabled]="!cell.allowed"
-          [disabled]="!cell.allowed"
-          (click)="handleClick(cell)"
-          (pointerdown)="handlePointerDown(cell, $event)"
-          (pointerenter)="handlePointerEnter(cell)"
-          [attr.aria-pressed]="cell.filled"
-          [attr.aria-label]="cell.filled ? 'Zaznaczona komorka' : 'Pusta komorka'"
-          [attr.data-testid]="'room-grid-cell-' + cell.x + '-' + cell.y"
-        ></button>
+        >
+        @for (cell of grid.cells; track trackByIndex($index, cell)) {
+          <button
+            type="button"
+            class="grid-editor__cell"
+            [class.grid-editor__cell--filled]="cell.filled"
+            [class.grid-editor__cell--disabled]="!cell.allowed"
+            [disabled]="!cell.allowed"
+            (click)="handleClick(cell)"
+            (pointerdown)="handlePointerDown(cell, $event)"
+            (pointerenter)="handlePointerEnter(cell)"
+            [attr.aria-pressed]="cell.filled"
+            [attr.aria-label]="cell.filled ? 'Zaznaczona komorka' : 'Pusta komorka'"
+            [attr.data-testid]="'room-grid-cell-' + cell.x + '-' + cell.y"
+          ></button>
+        }
       </div>
     </section>
-  `,
+    `,
   styles: [
     `
       .grid-editor__grid {
@@ -110,7 +111,7 @@ export class RoomGridEditorComponent {
     this.applyBrush(cell, !cell.filled);
   }
 
-  trackByIndex(index: number): number {
+  trackByIndex(index: number, _cell: RoomGridCell): number {
     return index;
   }
 

@@ -14,18 +14,22 @@
     (submitQuery)="submitQuery($event)"
   ></app-search-form>
 
-  <section class="search-page__loading" *ngIf="state.isLoading">
-    <mat-progress-spinner diameter="28" mode="indeterminate"></mat-progress-spinner>
-    <span>Wyszukiwanie...</span>
-  </section>
+  @if (state.isLoading) {
+    <section class="search-page__loading">
+      <mat-progress-spinner diameter="28" mode="indeterminate"></mat-progress-spinner>
+      <span>Wyszukiwanie...</span>
+    </section>
+  }
 
-  <app-search-results-list
-    *ngIf="!state.isLoading && state.results.length > 0"
-    [items]="state.results"
-    (open)="openResult($event)"
-  ></app-search-results-list>
+  @if (!state.isLoading && state.results.length > 0) {
+    <app-search-results-list
+      [items]="state.results"
+      (open)="openResult($event)"
+    ></app-search-results-list>
+  }
 
-  <app-search-empty-state
-    *ngIf="!state.isLoading && state.hasSearched && state.results.length === 0"
-  ></app-search-empty-state>
+  @if (!state.isLoading && state.hasSearched && state.results.length === 0) {
+    <app-search-empty-state
+    ></app-search-empty-state>
+  }
 </section>

@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
         mat-stroked-button
         type="button"
         data-testid="room-cancel-button"
-        (click)="cancel.emit()"
+        (click)="cancelAction.emit()"
       >
         Anuluj
       </button>
@@ -20,7 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
         color="primary"
         type="button"
         [disabled]="!canSave || isSaving"
-        (click)="save.emit()"
+        (click)="saveAction.emit()"
         data-testid="room-save-button"
       >
         {{ isSaving ? 'Zapisywanie...' : 'Zapisz' }}
@@ -40,6 +40,6 @@ import { MatButtonModule } from '@angular/material/button';
 export class RoomEditorActionsComponent {
   @Input() canSave = false;
   @Input() isSaving = false;
-  @Output() save = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() saveAction = new EventEmitter<void>();
+  @Output() cancelAction = new EventEmitter<void>();
 }

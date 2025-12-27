@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,15 +24,14 @@ import { RoomDetailsFacade, type CreateFurniturePayload, type FurniturePlacement
   standalone: true,
   imports: [
     AsyncPipe,
-    NgIf,
     MatButtonModule,
     MatDialogModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     RouterLink,
     RoomGridPreviewComponent,
-    FurnitureListComponent,
-  ],
+    FurnitureListComponent
+],
   templateUrl: './room-details-page.component.html',
   styleUrls: ['./room-details-page.component.scss'],
 })

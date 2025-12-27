@@ -1,32 +1,36 @@
 <section class="rooms-list-page">
   <app-rooms-list-header (create)="createRoom()" />
 
-  <ng-container *ngIf="state$ | async as state">
+  @if (state$ | async; as state) {
     <section class="rooms-list-page__content">
-      <div class="rooms-list-page__loading" *ngIf="state.isLoading">
-        <mat-progress-spinner diameter="32"></mat-progress-spinner>
-        <span>Laduje pokoje...</span>
-      </div>
-
-      <p class="rooms-list-page__error" *ngIf="state.error">
-        {{ describeError(state.error) }}
-      </p>
-
-      <app-rooms-list
-        *ngIf="!state.isLoading && state.rooms.length > 0"
-        [rooms]="state.rooms"
-        (open)="openRoom($event)"
-        (edit)="editRoom($event)"
-        (delete)="confirmDelete($event)"
-      />
-
-      <section class="rooms-list-page__empty" *ngIf="!state.isLoading && state.rooms.length === 0">
-        <h2>Brak pokojow</h2>
-        <p>Dodaj pierwszy pokoj, aby zaczac mapowac dom.</p>
-        <button mat-stroked-button color="primary" type="button" (click)="createRoom()">
-          Dodaj pokoj
-        </button>
-      </section>
+      @if (state.isLoading) {
+        <div class="rooms-list-page__loading">
+          <mat-progress-spinner diameter="32"></mat-progress-spinner>
+          <span>Laduje pokoje...</span>
+        </div>
+      }
+      @if (state.error) {
+        <p class="rooms-list-page__error">
+          {{ describeError(state.error) }}
+        </p>
+      }
+      @if (!state.isLoading && state.rooms.length > 0) {
+        <app-rooms-list
+          [rooms]="state.rooms"
+          (open)="openRoom($event)"
+          (edit)="editRoom($event)"
+          (delete)="confirmDelete($event)"
+          />
+      }
+      @if (!state.isLoading && state.rooms.length === 0) {
+        <section class="rooms-list-page__empty">
+          <h2>Brak pokojow</h2>
+          <p>Dodaj pierwszy pokoj, aby zaczac mapowac dom.</p>
+          <button mat-stroked-button color="primary" type="button" (click)="createRoom()">
+            Dodaj pokoj
+          </button>
+        </section>
+      }
     </section>
-  </ng-container>
+  }
 </section>

@@ -1,10 +1,10 @@
-import { NgIf } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-auth-form-card',
   standalone: true,
-  imports: [NgIf],
+  imports: [],
   templateUrl: './auth-form-card.component.html',
   styleUrls: ['./auth-form-card.component.scss'],
 })

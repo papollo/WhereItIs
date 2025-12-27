@@ -17,12 +17,14 @@
       type="button"
       (click)="addTestData()"
       [disabled]="isSeeding"
-    >
+      >
       Dodaj dane testowe
     </button>
-    <div class="user-edit-page__loading" *ngIf="isSeeding">
-      <mat-progress-spinner diameter="20"></mat-progress-spinner>
-      <span>Tworzenie danych testowych...</span>
-    </div>
+    @if (isSeeding) {
+      <div class="user-edit-page__loading">
+        <mat-progress-spinner diameter="20"></mat-progress-spinner>
+        <span>Tworzenie danych testowych...</span>
+      </div>
+    }
   </section>
 </section>

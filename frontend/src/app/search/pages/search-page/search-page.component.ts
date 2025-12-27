@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { ChangeDetectorRef, Component, NgZone, inject } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -20,13 +20,12 @@ import { SearchResultsListComponent } from '../../components/search-results-list
   selector: 'app-search-page',
   standalone: true,
   imports: [
-    NgIf,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     SearchFormComponent,
     SearchResultsListComponent,
-    SearchEmptyStateComponent,
-  ],
+    SearchEmptyStateComponent
+],
   templateUrl: './search-page.component.html',
   styleUrls: ['./search-page.component.scss'],
 })

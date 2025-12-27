@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { HttpClient } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +13,7 @@ import { ApiError } from '../../../shared/api-error';
 @Component({
   selector: 'app-user-edit-page',
   standalone: true,
-  imports: [NgIf, MatButtonModule, MatProgressSpinnerModule, MatSnackBarModule],
+  imports: [MatButtonModule, MatProgressSpinnerModule, MatSnackBarModule],
   templateUrl: './user-edit-page.component.html',
   styleUrls: ['./user-edit-page.component.scss'],
 })

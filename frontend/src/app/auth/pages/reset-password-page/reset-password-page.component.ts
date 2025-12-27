@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, OnInit, inject } from '@angular/core';
 import {
   AbstractControl,
@@ -35,7 +35,6 @@ const passwordMatchValidator = (control: AbstractControl): ValidationErrors | nu
   selector: 'app-reset-password-page',
   standalone: true,
   imports: [
-    NgIf,
     ReactiveFormsModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -44,8 +43,8 @@ const passwordMatchValidator = (control: AbstractControl): ValidationErrors | nu
     AuthLayoutComponent,
     AuthFormCardComponent,
     PasswordFieldComponent,
-    InlineErrorComponent,
-  ],
+    InlineErrorComponent
+],
   templateUrl: './reset-password-page.component.html',
   styleUrls: ['./reset-password-page.component.scss'],
 })

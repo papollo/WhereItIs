@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import type { FurnitureListItemVM } from '../furniture.view-models';
 import { FurnitureCardComponent } from './furniture-card.component';
@@ -6,20 +6,21 @@ import { FurnitureCardComponent } from './furniture-card.component';
 @Component({
   selector: 'app-furniture-list',
   standalone: true,
-  imports: [NgFor, FurnitureCardComponent],
+  imports: [FurnitureCardComponent],
   template: `
     <section class="furniture-list" aria-label="Lista mebli">
-      <app-furniture-card
-        *ngFor="let item of items; trackBy: trackByFurnitureId"
-        [item]="item"
-        [highlighted]="item.id === highlightedId"
-        (open)="open.emit($event)"
-        (edit)="edit.emit($event)"
-        (delete)="delete.emit($event)"
-        (hover)="hover.emit($event)"
-      />
+      @for (item of items; track trackByFurnitureId($index, item)) {
+        <app-furniture-card
+          [item]="item"
+          [highlighted]="item.id === highlightedId"
+          (open)="open.emit($event)"
+          (edit)="edit.emit($event)"
+          (delete)="delete.emit($event)"
+          (hover)="hover.emit($event)"
+          />
+      }
     </section>
-  `,
+    `,
   styles: [
     `
       .furniture-list {

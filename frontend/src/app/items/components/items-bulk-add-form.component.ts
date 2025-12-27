@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,7 +8,7 @@ import type { ItemDraftVM } from '../items.view-models';
 @Component({
   selector: 'app-items-bulk-add-form',
   standalone: true,
-  imports: [NgFor, NgIf, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [MatButtonModule, MatFormFieldModule, MatInputModule],
   template: `
     <section class="items-form">
       <header class="items-form__header">
@@ -17,35 +17,41 @@ import type { ItemDraftVM } from '../items.view-models';
           +
         </button>
       </header>
-
+    
       <div class="items-form__rows">
-        <div class="items-form__row" *ngFor="let draft of drafts; trackBy: trackByDraftId">
-          <mat-form-field appearance="outline" class="items-form__field">
-            <mat-label>Przedmiot</mat-label>
-            <input
-              matInput
-              [value]="draft.name"
-              (input)="onInputChange(draft.id, $event)"
-              maxlength="200"
-            />
-            <mat-error *ngIf="draft.error">{{ draft.error }}</mat-error>
-            <mat-error *ngIf="!draft.error && draft.serverError">
-              {{ draft.serverError }}
-            </mat-error>
-          </mat-form-field>
-          <button
-            mat-stroked-button
-            color="warn"
-            type="button"
-            (click)="remove.emit(draft.id)"
-            [disabled]="saving || drafts.length === 1"
-          >
-            Usun
-          </button>
-        </div>
+        @for (draft of drafts; track trackByDraftId($index, draft)) {
+          <div class="items-form__row">
+            <mat-form-field appearance="outline" class="items-form__field">
+              <mat-label>Przedmiot</mat-label>
+              <input
+                matInput
+                [value]="draft.name"
+                (input)="onInputChange(draft.id, $event)"
+                maxlength="200"
+                />
+              @if (draft.error) {
+                <mat-error>{{ draft.error }}</mat-error>
+              }
+              @if (!draft.error && draft.serverError) {
+                <mat-error>
+                  {{ draft.serverError }}
+                </mat-error>
+              }
+            </mat-form-field>
+            <button
+              mat-stroked-button
+              color="warn"
+              type="button"
+              (click)="remove.emit(draft.id)"
+              [disabled]="saving || drafts.length === 1"
+              >
+              Usun
+            </button>
+          </div>
+        }
       </div>
     </section>
-  `,
+    `,
   styles: [
     `
       .items-form {

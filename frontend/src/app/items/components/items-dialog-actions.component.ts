@@ -8,12 +8,12 @@ import { MatDialogModule } from '@angular/material/dialog';
   imports: [MatDialogModule, MatButtonModule],
   template: `
     <mat-dialog-actions align="end">
-      <button mat-button type="button" (click)="cancel.emit()" [disabled]="saving">Anuluj</button>
+      <button mat-button type="button" (click)="cancelAction.emit()" [disabled]="saving">Anuluj</button>
       <button
         mat-flat-button
         color="primary"
         type="button"
-        (click)="save.emit()"
+        (click)="saveAction.emit()"
         [disabled]="!canSave || saving"
       >
         Zapisz
@@ -24,6 +24,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 export class ItemsDialogActionsComponent {
   @Input() canSave = false;
   @Input() saving = false;
-  @Output() cancel = new EventEmitter<void>();
-  @Output() save = new EventEmitter<void>();
+  @Output() cancelAction = new EventEmitter<void>();
+  @Output() saveAction = new EventEmitter<void>();
 }

@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import type { RoomCellDto } from '../rooms.types';
 
@@ -15,25 +15,26 @@ export type RoomPlacementPreview = {
 @Component({
   selector: 'app-room-grid-preview',
   standalone: true,
-  imports: [NgFor, NgIf],
+  imports: [],
   template: `
     <div
       class="room-grid__wrap"
       [style.--cell-size.px]="cellSizePx"
       [style.--fill-color]="fillColor"
-    >
+      >
       <div
         class="room-grid"
         [style.gridTemplateColumns]="gridTemplateColumns"
         [style.gridTemplateRows]="gridTemplateRows"
         role="grid"
         aria-label="Siatka pokoju"
-      >
-        <div
-          class="room-grid__cell"
-          *ngFor="let cell of gridCells; trackBy: trackByIndex"
-          [class.room-grid__cell--filled]="cell.filled"
-        ></div>
+        >
+        @for (cell of gridCells; track trackByIndex($index, cell)) {
+          <div
+            class="room-grid__cell"
+            [class.room-grid__cell--filled]="cell.filled"
+          ></div>
+        }
       </div>
       <div
         class="room-grid__overlay"
@@ -41,27 +42,30 @@ export type RoomPlacementPreview = {
         [style.gridTemplateRows]="gridTemplateRows"
         aria-hidden="true"
         (mouseleave)="setInternalHover(null)"
-      >
-        <div
-          class="room-grid__placement"
-          *ngFor="let placement of placementCells; trackBy: trackByPlacementId"
-          [style.gridColumn]="placement.gridColumn"
-          [style.gridRow]="placement.gridRow"
-          [style.--placement-color]="placement.color"
+        >
+        @for (placement of placementCells; track trackByPlacementId($index, placement)) {
+          <div
+            class="room-grid__placement"
+            [style.gridColumn]="placement.gridColumn"
+            [style.gridRow]="placement.gridRow"
+            [style.--placement-color]="placement.color"
           [class.room-grid__placement--active]="
             placement.furnitureId === highlightedFurnitureId ||
             placement.furnitureId === hoveredFurnitureId ||
             placement.furnitureId === internalHoveredFurnitureId
           "
-          (mouseenter)="setInternalHover(placement.furnitureId)"
-          (mouseleave)="setInternalHover(null)"
-          [attr.title]="placement.name ?? ''"
-        >
-          <span class="room-grid__label" *ngIf="placement.name">{{ placement.name }}</span>
-        </div>
+            (mouseenter)="setInternalHover(placement.furnitureId)"
+            (mouseleave)="setInternalHover(null)"
+            [attr.title]="placement.name ?? ''"
+            >
+            @if (placement.name) {
+              <span class="room-grid__label">{{ placement.name }}</span>
+            }
+          </div>
+        }
       </div>
     </div>
-  `,
+    `,
   styles: [
     `
       .room-grid__wrap {
@@ -196,7 +200,7 @@ export class RoomGridPreviewComponent implements OnChanges {
     });
   }
 
-  trackByIndex(index: number): number {
+  trackByIndex(index: number, _cell: { filled: boolean }): number {
     return index;
   }
 

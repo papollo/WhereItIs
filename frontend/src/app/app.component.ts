@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -9,7 +9,7 @@ import { AuthSessionService } from './auth/auth-session.service';
 
 @Component({
   selector: 'app-root',
-  imports: [AsyncPipe, NgIf, RouterOutlet, RouterLink, RouterLinkActive, MatSnackBarModule],
+  imports: [AsyncPipe, RouterOutlet, RouterLink, RouterLinkActive, MatSnackBarModule],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })

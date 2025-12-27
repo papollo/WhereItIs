@@ -4,26 +4,31 @@
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" formControlName="email" autocomplete="email" />
-        <mat-error *ngIf="form.controls.email.hasError('required')">
-          Email jest wymagany.
-        </mat-error>
-        <mat-error *ngIf="form.controls.email.hasError('email')">
-          Podaj poprawny adres email.
-        </mat-error>
+        @if (form.controls.email.hasError('required')) {
+          <mat-error>
+            Email jest wymagany.
+          </mat-error>
+        }
+        @if (form.controls.email.hasError('email')) {
+          <mat-error>
+            Podaj poprawny adres email.
+          </mat-error>
+        }
       </mat-form-field>
 
       <app-password-field
         [control]="form.controls.password"
         label="Haslo"
         autocomplete="current-password"
-      >
-        <mat-error
-          *ngIf="
-            form.controls.password.hasError('required') && form.controls.password.touched
-          "
         >
-          Haslo jest wymagane.
-        </mat-error>
+        @if (
+          form.controls.password.hasError('required') && form.controls.password.touched
+          ) {
+          <mat-error
+            >
+            Haslo jest wymagane.
+          </mat-error>
+        }
       </app-password-field>
 
       <app-inline-error [message]="formError"></app-inline-error>

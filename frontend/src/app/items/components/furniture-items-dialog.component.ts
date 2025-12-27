@@ -1,5 +1,5 @@
-import { NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, OnInit, inject } from '@angular/core';
+
+import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { MatDialog, MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { firstValueFrom } from 'rxjs';
@@ -27,13 +27,12 @@ export type FurnitureItemsDialogData = {
   selector: 'app-furniture-items-dialog',
   standalone: true,
   imports: [
-    NgIf,
     MatDialogModule,
     MatSnackBarModule,
     ItemsListComponent,
     ItemsBulkAddFormComponent,
-    ItemsDialogActionsComponent,
-  ],
+    ItemsDialogActionsComponent
+],
   template: `
     <h2 mat-dialog-title>Przedmioty: {{ data.furnitureName }}</h2>
     <mat-dialog-content class="items-dialog">
@@ -46,7 +45,7 @@ export type FurnitureItemsDialogData = {
           (update)="updateDraft($event)"
         ></app-items-bulk-add-form>
       </section>
-
+    
       <section class="items-dialog__column">
         <app-items-list
           [items]="items"
@@ -54,18 +53,20 @@ export type FurnitureItemsDialogData = {
           [busyIds]="deleteBusyIds"
           (delete)="confirmDelete($event)"
         ></app-items-list>
-
-        <p class="items-dialog__error" *ngIf="listError">{{ listError }}</p>
+    
+        @if (listError) {
+          <p class="items-dialog__error">{{ listError }}</p>
+        }
       </section>
     </mat-dialog-content>
-
+    
     <app-items-dialog-actions
       [canSave]="canSave"
       [saving]="isSaving"
-      (cancel)="close()"
-      (save)="saveDrafts()"
+      (cancelAction)="close()"
+      (saveAction)="saveDrafts()"
     ></app-items-dialog-actions>
-  `,
+    `,
   styles: [
     `
       .items-dialog {
@@ -96,6 +97,8 @@ export type FurnitureItemsDialogData = {
   ],
 })
 export class FurnitureItemsDialogComponent implements OnInit {
+  readonly data = inject<FurnitureItemsDialogData>(MAT_DIALOG_DATA);
+
   private readonly api = inject(ItemsApi);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
@@ -110,7 +113,9 @@ export class FurnitureItemsDialogComponent implements OnInit {
   deleteBusyIds = new Set<string>();
   private draftCounter = 0;
 
-  constructor(@Inject(MAT_DIALOG_DATA) readonly data: FurnitureItemsDialogData) {
+  constructor() {
+    const data = this.data;
+
     if (data.initialItems) {
       this.items = [...data.initialItems];
     }

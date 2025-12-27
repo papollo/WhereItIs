@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +17,6 @@ import { AuthLayoutComponent } from '../../layouts/auth-layout.component';
   selector: 'app-login-page',
   standalone: true,
   imports: [
-    NgIf,
     ReactiveFormsModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -27,8 +26,8 @@ import { AuthLayoutComponent } from '../../layouts/auth-layout.component';
     AuthLayoutComponent,
     AuthFormCardComponent,
     PasswordFieldComponent,
-    InlineErrorComponent,
-  ],
+    InlineErrorComponent
+],
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.scss'],
 })

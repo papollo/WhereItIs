@@ -1,4 +1,4 @@
-import { DatePipe, NgIf } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -7,14 +7,14 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
 @Component({
   selector: 'app-furniture-card',
   standalone: true,
-  imports: [MatCardModule, MatButtonModule, DatePipe, NgIf],
+  imports: [MatCardModule, MatButtonModule, DatePipe],
   template: `
     <mat-card
       class="furniture-card"
       [class.furniture-card--highlighted]="highlighted"
       (mouseenter)="hover.emit(item.id)"
       (mouseleave)="hover.emit(null)"
-    >
+      >
       <div class="furniture-card__row">
         <div
           class="furniture-card__color"
@@ -26,33 +26,35 @@ import type { FurnitureListItemVM } from '../furniture.view-models';
             <h3>{{ item.name }}</h3>
             <span class="furniture-card__meta"
               >Aktualizacja: {{ item.updatedAt | date: 'mediumDate' }}</span
-            >
+              >
+            </div>
+            @if (item.description) {
+              <p>{{ item.description }}</p>
+            }
           </div>
-          <p *ngIf="item.description">{{ item.description }}</p>
+          <div class="furniture-card__actions">
+            <button
+              mat-stroked-button
+              color="primary"
+              type="button"
+              (click)="handleEdit($event)"
+              aria-label="Edytuj mebel"
+              >
+              Edytuj
+            </button>
+            <button
+              mat-stroked-button
+              color="warn"
+              type="button"
+              (click)="handleDelete($event)"
+              aria-label="Usun mebel"
+              >
+              Usun
+            </button>
+          </div>
         </div>
-        <div class="furniture-card__actions">
-          <button
-            mat-stroked-button
-            color="primary"
-            type="button"
-            (click)="handleEdit($event)"
-            aria-label="Edytuj mebel"
-          >
-            Edytuj
-          </button>
-          <button
-            mat-stroked-button
-            color="warn"
-            type="button"
-            (click)="handleDelete($event)"
-            aria-label="Usun mebel"
-          >
-            Usun
-          </button>
-        </div>
-      </div>
-    </mat-card>
-  `,
+      </mat-card>
+    `,
   styles: [
     `
       .furniture-card {

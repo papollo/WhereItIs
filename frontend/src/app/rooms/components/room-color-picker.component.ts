@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -10,22 +10,23 @@ export type ColorOption = {
 @Component({
   selector: 'app-room-color-picker',
   standalone: true,
-  imports: [MatButtonModule, NgFor],
+  imports: [MatButtonModule],
   template: `
     <div class="color-picker">
-      <button
-        *ngFor="let color of colors; trackBy: trackByColor"
-        mat-icon-button
-        type="button"
-        class="color-picker__swatch"
-        [class.color-picker__swatch--active]="color.value === value"
-        [style.backgroundColor]="color.value"
-        (click)="selectColor(color.value)"
-        [attr.aria-label]="color.label ?? color.value"
-        [attr.data-testid]="colorTestId(color.value)"
-      ></button>
+      @for (color of colors; track trackByColor($index, color)) {
+        <button
+          mat-icon-button
+          type="button"
+          class="color-picker__swatch"
+          [class.color-picker__swatch--active]="color.value === value"
+          [style.backgroundColor]="color.value"
+          (click)="selectColor(color.value)"
+          [attr.aria-label]="color.label ?? color.value"
+          [attr.data-testid]="colorTestId(color.value)"
+        ></button>
+      }
     </div>
-  `,
+    `,
   styles: [
     `
       .color-picker {

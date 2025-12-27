@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 @Component({
   selector: 'app-search-form',
   standalone: true,
-  imports: [NgIf, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [MatButtonModule, MatFormFieldModule, MatInputModule],
   template: `
     <form class="search-form" (submit)="onSubmit($event)">
       <mat-form-field appearance="outline" class="search-form__field">
@@ -18,19 +18,21 @@ import { MatInputModule } from '@angular/material/input';
           (input)="onInput($event)"
           [disabled]="disabled"
           maxlength="200"
-        />
-        <mat-error *ngIf="error">{{ error }}</mat-error>
+          />
+        @if (error) {
+          <mat-error>{{ error }}</mat-error>
+        }
       </mat-form-field>
       <button
         mat-flat-button
         color="primary"
         type="submit"
         [disabled]="disabled || !isQueryValid"
-      >
+        >
         Szukaj
       </button>
     </form>
-  `,
+    `,
   styles: [
     `
       .search-form {

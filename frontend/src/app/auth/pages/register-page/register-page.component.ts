@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import {
   AbstractControl,
@@ -35,7 +35,6 @@ const passwordMatchValidator = (control: AbstractControl): ValidationErrors | nu
   selector: 'app-register-page',
   standalone: true,
   imports: [
-    NgIf,
     ReactiveFormsModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -45,8 +44,8 @@ const passwordMatchValidator = (control: AbstractControl): ValidationErrors | nu
     AuthLayoutComponent,
     AuthFormCardComponent,
     PasswordFieldComponent,
-    InlineErrorComponent,
-  ],
+    InlineErrorComponent
+],
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.scss'],
 })

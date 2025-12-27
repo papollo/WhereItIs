@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,14 +19,13 @@ import { RoomsListHeaderComponent } from '../../components/rooms-list-header.com
   standalone: true,
   imports: [
     AsyncPipe,
-    NgIf,
     MatButtonModule,
     MatDialogModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
     RoomsListHeaderComponent,
-    RoomsListComponent,
-  ],
+    RoomsListComponent
+],
   templateUrl: './rooms-list-page.component.html',
   styleUrls: ['./rooms-list-page.component.scss'],
 })

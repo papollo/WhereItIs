@@ -1,4 +1,4 @@
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe } from '@angular/common';
 import { Component, DestroyRef, OnInit, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,7 +23,6 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
   standalone: true,
   imports: [
     AsyncPipe,
-    NgIf,
     MatButtonModule,
     MatButtonToggleModule,
     MatProgressSpinnerModule,
@@ -31,64 +30,69 @@ import type { CreateRoomCommand, UpdateRoomCommand } from '../../rooms.types';
     RouterLink,
     RoomFormComponent,
     RoomGridEditorComponent,
-    RoomEditorActionsComponent,
-  ],
+    RoomEditorActionsComponent
+],
   template: `
-    <section class="room-editor" *ngIf="state$ | async as state">
-      <header class="room-editor__header">
-        <div>
-          <h1>{{ isEdit ? 'Edytuj pokoj' : 'Nowy pokoj' }}</h1>
-          <p>Wypelnij dane i zaznacz ksztalt pokoju na siatce.</p>
-        </div>
-        <a mat-stroked-button routerLink="/rooms">Wroc do listy</a>
-      </header>
-
-      <div class="room-editor__loading" *ngIf="state.isLoading">
-        <mat-progress-spinner diameter="32"></mat-progress-spinner>
-        <span>Laduje dane pokoju...</span>
-      </div>
-
-      <section *ngIf="state.notFound && !state.isLoading" class="room-editor__empty">
-        <h2>Nie znaleziono pokoju</h2>
-        <p>Sprawdz, czy link jest poprawny.</p>
+    @if (state$ | async; as state) {
+      <section class="room-editor">
+        <header class="room-editor__header">
+          <div>
+            <h1>{{ isEdit ? 'Edytuj pokoj' : 'Nowy pokoj' }}</h1>
+            <p>Wypelnij dane i zaznacz ksztalt pokoju na siatce.</p>
+          </div>
+          <a mat-stroked-button routerLink="/rooms">Wroc do listy</a>
+        </header>
+        @if (state.isLoading) {
+          <div class="room-editor__loading">
+            <mat-progress-spinner diameter="32"></mat-progress-spinner>
+            <span>Laduje dane pokoju...</span>
+          </div>
+        }
+        @if (state.notFound && !state.isLoading) {
+          <section class="room-editor__empty">
+            <h2>Nie znaleziono pokoju</h2>
+            <p>Sprawdz, czy link jest poprawny.</p>
+          </section>
+        }
+        @if (!state.notFound) {
+          <section class="room-editor__content">
+            <app-room-form [value]="formValue" (valueChange)="updateForm($event)"></app-room-form>
+            <div class="room-editor__grid">
+              <h2>Siatka pokoju</h2>
+              <p class="room-editor__hint">
+                Kliknij komorki, aby je zaznaczyc. Kolejne komorki musza sie stykac.
+              </p>
+              <mat-button-toggle-group
+                class="room-editor__brush"
+                [value]="brushSize"
+                (valueChange)="setBrushSize($event)"
+                aria-label="Rozmiar pedzla"
+                >
+                <mat-button-toggle [value]="1">1x1</mat-button-toggle>
+                <mat-button-toggle [value]="3">3x3</mat-button-toggle>
+                <mat-button-toggle [value]="5">5x5</mat-button-toggle>
+              </mat-button-toggle-group>
+              <app-room-grid-editor
+                [grid]="gridState"
+                [fillColor]="formValue.color"
+                [brushSize]="brushSize"
+                (setCell)="setCell($event)"
+              ></app-room-grid-editor>
+              @if (validationError) {
+                <p class="room-editor__error">{{ validationError }}</p>
+              }
+            </div>
+            <app-room-editor-actions
+              [canSave]="canSave()"
+              [isSaving]="state.isSaving"
+              (saveAction)="save()"
+              (cancelAction)="cancel()"
+            ></app-room-editor-actions>
+          </section>
+        }
       </section>
-
-      <section class="room-editor__content" *ngIf="!state.notFound">
-        <app-room-form [value]="formValue" (valueChange)="updateForm($event)"></app-room-form>
-
-        <div class="room-editor__grid">
-          <h2>Siatka pokoju</h2>
-          <p class="room-editor__hint">
-            Kliknij komorki, aby je zaznaczyc. Kolejne komorki musza sie stykac.
-          </p>
-          <mat-button-toggle-group
-            class="room-editor__brush"
-            [value]="brushSize"
-            (valueChange)="setBrushSize($event)"
-            aria-label="Rozmiar pedzla"
-          >
-            <mat-button-toggle [value]="1">1x1</mat-button-toggle>
-            <mat-button-toggle [value]="3">3x3</mat-button-toggle>
-            <mat-button-toggle [value]="5">5x5</mat-button-toggle>
-          </mat-button-toggle-group>
-          <app-room-grid-editor
-            [grid]="gridState"
-            [fillColor]="formValue.color"
-            [brushSize]="brushSize"
-            (setCell)="setCell($event)"
-          ></app-room-grid-editor>
-          <p class="room-editor__error" *ngIf="validationError">{{ validationError }}</p>
-        </div>
-
-        <app-room-editor-actions
-          [canSave]="canSave()"
-          [isSaving]="state.isSaving"
-          (save)="save()"
-          (cancel)="cancel()"
-        ></app-room-editor-actions>
-      </section>
-    </section>
-  `,
+    }
+    `,
   styleUrls: ['./room-editor-page.component.scss'],
 })
 export class RoomEditorPageComponent implements OnInit {
