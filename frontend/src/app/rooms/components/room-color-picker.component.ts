@@ -22,6 +22,7 @@ export type ColorOption = {
         [style.backgroundColor]="color.value"
         (click)="selectColor(color.value)"
         [attr.aria-label]="color.label ?? color.value"
+        [attr.data-testid]="colorTestId(color.value)"
       ></button>
     </div>
   `,
@@ -53,6 +54,10 @@ export class RoomColorPickerComponent {
 
   selectColor(color: string): void {
     this.valueChange.emit(color);
+  }
+
+  colorTestId(value: string): string {
+    return `room-color-${value.replace('#', '')}`;
   }
 
   trackByColor(index: number, color: ColorOption): string {

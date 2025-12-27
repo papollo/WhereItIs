@@ -7,7 +7,7 @@ import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
   standalone: true,
   imports: [NgFor],
   template: `
-    <section class="grid-editor" aria-label="Edytor siatki pokoju">
+    <section class="grid-editor" aria-label="Edytor siatki pokoju" data-testid="room-grid">
       <div
         class="grid-editor__grid"
         [style.gridTemplateColumns]="gridTemplateColumns"
@@ -26,6 +26,7 @@ import type { RoomGridCell, RoomGridState } from '../room-grid-editor.service';
           (pointerenter)="handlePointerEnter(cell)"
           [attr.aria-pressed]="cell.filled"
           [attr.aria-label]="cell.filled ? 'Zaznaczona komorka' : 'Pusta komorka'"
+          [attr.data-testid]="'room-grid-cell-' + cell.x + '-' + cell.y"
         ></button>
       </div>
     </section>

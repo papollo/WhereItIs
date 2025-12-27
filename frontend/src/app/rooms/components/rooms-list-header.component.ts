@@ -11,7 +11,13 @@ import { MatButtonModule } from '@angular/material/button';
         <h1>Twoje pokoje</h1>
         <p class="rooms-list-header__subtitle">Zarzadzaj przestrzenia i dodawaj nowe pokoje.</p>
       </div>
-      <button mat-flat-button color="primary" type="button" (click)="create.emit()">
+      <button
+        mat-flat-button
+        color="primary"
+        type="button"
+        data-testid="rooms-add-button"
+        (click)="create.emit()"
+      >
         Dodaj pokoj
       </button>
     </header>

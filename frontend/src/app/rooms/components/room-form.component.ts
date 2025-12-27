@@ -19,7 +19,7 @@ export type RoomFormValue = {
     <form [formGroup]="form" class="room-form">
       <mat-form-field appearance="outline">
         <mat-label>Nazwa pokoju</mat-label>
-        <input matInput formControlName="name" maxlength="100" />
+        <input matInput formControlName="name" maxlength="100" data-testid="room-name-input" />
         <mat-error *ngIf="form.controls.name.hasError('required')">Nazwa jest wymagana.</mat-error>
         <mat-error *ngIf="form.controls.name.hasError('maxlength')">
           Maksymalnie 100 znakow.
@@ -35,7 +35,7 @@ export type RoomFormValue = {
         ></app-room-color-picker>
         <mat-form-field appearance="outline">
           <mat-label>HEX</mat-label>
-          <input matInput formControlName="color" maxlength="7" />
+          <input matInput formControlName="color" maxlength="7" data-testid="room-color-input" />
           <mat-error *ngIf="form.controls.color.hasError('pattern')">
             Podaj poprawny kolor, np. #aabbcc.
           </mat-error>

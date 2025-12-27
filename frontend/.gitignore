@@ -44,3 +44,6 @@ Thumbs.db
 
 # Cursor
 .cursor/
+
+#env
+/src/environments/environment.e2e.ts

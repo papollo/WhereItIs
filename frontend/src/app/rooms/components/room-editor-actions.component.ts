@@ -7,13 +7,21 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [MatButtonModule],
   template: `
     <div class="room-editor-actions">
-      <button mat-stroked-button type="button" (click)="cancel.emit()">Anuluj</button>
+      <button
+        mat-stroked-button
+        type="button"
+        data-testid="room-cancel-button"
+        (click)="cancel.emit()"
+      >
+        Anuluj
+      </button>
       <button
         mat-flat-button
         color="primary"
         type="button"
         [disabled]="!canSave || isSaving"
         (click)="save.emit()"
+        data-testid="room-save-button"
       >
         {{ isSaving ? 'Zapisywanie...' : 'Zapisz' }}
       </button>
